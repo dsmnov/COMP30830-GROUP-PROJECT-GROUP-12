@@ -16,7 +16,15 @@ import time
 import os
 import pymysql
 
+#Database access and connection_string
+USER = "denissemenov"
+PASSWORD = "897641579123"
+PORT = "3306"
+DB = "dbbikes"
+URI = "127.0.0.1"
+connection_string = "mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB)
 
+#Start of Flask backend running code
 app = Flask(__name__, template_folder="templates")
 CORS(app)
 
@@ -30,21 +38,23 @@ def map_page():
 
 @app.route("/api/stations", methods=["GET"])
 def get_stations():
-    USER = "denissemenov"
-    PASSWORD = "897641579123"
-    PORT = "3306"
-    DB = "dbbikes"
-    URI = "127.0.0.1"
-
-    connection_string = "mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB)
-
     engine = create_engine(connection_string, echo = True)
 
     with engine.connect() as connection:
-        result = connection.execute(sqla.text("SELECT name, lat, lng FROM station"))
+        result = connection.execute(sqla.text("SELECT number, name, lat, lng FROM station"))
         stations = [dict(row) for row in result.mappings()]
 
     return jsonify(stations)
+
+@app.route("/api/availability", methods=["GET"])
+def get_availability():
+    engine = create_engine(connection_string, echo = True)
+
+    with engine.connect() as connection:
+        result = connection.execute(sqla.text("SELECT number, available_bike_stands, available_bikes FROM availability"))
+        availability = [dict(row) for row in result.mappings()]
+
+    return jsonify(availability)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

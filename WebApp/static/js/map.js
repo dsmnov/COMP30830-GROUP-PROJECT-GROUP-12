@@ -17,6 +17,7 @@ async function initMap() {
     .then(data => {
 
       data.forEach(station => {
+        const number = station.number
         const coordinates = { lat: station.lat, lng: station.lng };
         const title = station.name
 
@@ -26,20 +27,25 @@ async function initMap() {
           title: title,
         });
 
-        const contentString = `
-          <div id="content">
-            <h1>${title}</h1>
-            <ul>
-              <li>Latitude: ${station.lat}</li>
-              <li>Longitude: ${station.lng}</li>
-            </ul>
-          </div>`;
+        function createInfoWindowContent(title, availableBikes, parkingStations) {
+          return `
+              <div id="content">
+                  <h1>${title}</h1>
+                  <ul>
+                      <li>Available Bikes: ${availableBikes}</li>
+                      <li>Parking Stations: ${parkingStations}</li>
+                  </ul>
+              </div>`;
+        }
 
-        const infoWindow = new google.maps.InfoWindow({
-          content: contentString
-        })
+        const infoWindow = new google.maps.InfoWindow()
 
         marker.addEventListener("mouseover", () => {
+          //function to dynamically update data goes here//
+          const availableBikes = "placeholder"
+          const parkingStations = "placeholder"
+          infoWindow.setContent(createInfoWindowContent(title, availableBikes, parkingStations));
+
           infoWindow.open({
               anchor: marker,
               map: map
