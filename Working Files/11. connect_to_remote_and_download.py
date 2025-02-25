@@ -27,15 +27,19 @@ def stations_to_db(text, in_engine):
         with in_engine.connect() as connection:
             transaction = connection.begin()
             try:
+                position = station.get('position')
+
                 connection.execute(sqla.text("""
-                    INSERT INTO station (address, banking, bikestands, name, status)
-                    VALUES (:address, :banking, :bikestands, :name, :status);
+                    INSERT INTO station (address, banking, bikestands, name, status, lat, lng)
+                    VALUES (:address, :banking, :bikestands, :name, :status, :lat, :lng);
                 """), {
                     "address": station.get('address'),
                     "banking": int(station.get('banking')),
                     "bikestands": int(station.get('bike_stands')),
                     "name": station.get('name'),
                     "status": station.get('status'),
+                    "lat": position.get('lat'),
+                    "lng": position.get('lng')
                 })
                 transaction.commit()
             except Exception as e:
@@ -57,11 +61,14 @@ with engine.connect() as connection:
 
     connection.execute(sqla.text('''
         CREATE TABLE IF NOT EXISTS station (
-        address VARCHAR(256), 
-        banking INTEGER,
-        bikestands INTEGER,
-        name VARCHAR(256),
-        status VARCHAR(256));
+            address VARCHAR(256), 
+            banking INTEGER,
+            bikestands INTEGER,
+            name VARCHAR(256),
+            status VARCHAR(256),
+            lat DOUBLE NOT NULL,
+            lng DOUBLE NOT NULL
+        );                        
         '''))
 
 try:
