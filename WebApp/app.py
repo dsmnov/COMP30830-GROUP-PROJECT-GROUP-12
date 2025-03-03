@@ -51,7 +51,7 @@ def get_availability():
     engine = create_engine(connection_string, echo = True)
 
     with engine.connect() as connection:
-        result = connection.execute(sqla.text("SELECT number, available_bike_stands, available_bikes FROM availability"))
+        result = connection.execute(sqla.text("SELECT a.number, a.available_bike_stands, a.available_bikes, a.last_update FROM availability a JOIN (SELECT number, MAX(last_update) AS max_last_update FROM availability GROUP BY number) AS latest ON a.number = latest.number AND a.last_update = latest.max_last_update ORDER BY a.number;"))
         availability = [dict(row) for row in result.mappings()]
 
     return jsonify(availability)

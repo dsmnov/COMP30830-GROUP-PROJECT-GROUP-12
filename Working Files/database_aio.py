@@ -11,10 +11,11 @@ from IPython.display import display
 import traceback
 from datetime import datetime, timezone
 import time
-import os
+import sys
 import dbinfo
 import pymysql
 
+#My own local connection (Denis) - If you plan to run this code, modify the login details
 USER = "denissemenov"
 PASSWORD = "897641579123"
 PORT = "3306"
@@ -25,35 +26,35 @@ URI = "127.0.0.1"
 connection_string = "mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB)
 engine = create_engine(connection_string, echo = True)
 
-def create_db():
+def create_db(engine):
 	with engine.connect() as connection:
 		transaction = connection.begin()
-	try:
-		connection.execute(sqla.text('''
-			CREATE TABLE IF NOT EXISTS station (
-				number INTEGER,                    
-				address VARCHAR(256), 
-				banking INTEGER,
-				bikestands INTEGER,
-				name VARCHAR(256),
-				status VARCHAR(256),
-				lat DOUBLE NOT NULL,
-				lng DOUBLE NOT NULL
-			);                        
+		try:
+			connection.execute(sqla.text('''
+				CREATE TABLE IF NOT EXISTS station (
+					number INTEGER,                    
+					address VARCHAR(256), 
+					banking INTEGER,
+					bikestands INTEGER,
+					name VARCHAR(256),
+					status VARCHAR(256),
+					lat DOUBLE NOT NULL,
+					lng DOUBLE NOT NULL
+				);                        
 			'''))
 		
-		connection.execute(sqla.text('''
-			CREATE TABLE IF NOT EXISTS availability (
-				number INTEGER,
-				available_bikes INTEGER,
-				available_bike_stands INTEGER,
-				last_update DATETIME
-			);                        
+			connection.execute(sqla.text('''
+				CREATE TABLE IF NOT EXISTS availability (
+					number INTEGER,
+					available_bikes INTEGER,
+					available_bike_stands INTEGER,
+					last_update DATETIME
+				);                        
 			'''))
-		transaction.commit()
-	except Exception as e:
-				transaction.rollback()
-				print('Error inserting:', e)
+			transaction.commit()
+		except Exception as e:
+			transaction.rollback()
+			print('Error inserting:', e)
 
 def station_to_db(station_api, engine):
 	stations = json.loads(station_api)
@@ -90,18 +91,12 @@ def station_to_db(station_api, engine):
 
 def availability_to_db(avail_api, engine):
 	availability = json.loads(avail_api)
-
+	timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 	for station in availability:
 
 		with engine.connect() as connection:
 			try:
 				transaction = connection.begin()
-
-				no_format_timestamp = datetime.now().timestamp()
-				timestamp_ms = int(no_format_timestamp)
-				last_update_datetime = datetime.fromtimestamp(timestamp_ms / 1000, tz=timezone.utc)
-				timestamp = last_update_datetime.strftime('%Y-%m-%d %H:%M:%S')
-
 
 				connection.execute(sqla.text("""
 					INSERT INTO availability (number, available_bikes, available_bike_stands, last_update)
@@ -117,40 +112,70 @@ def availability_to_db(avail_api, engine):
 				transaction.rollback()
 				print('Error inserting: ', e)
 
+#My own local directory (Denis) - If you plan to run this code, modify the directory
+dir = "C:/Users/Denis/Desktop/Trimester_2/C30830 - Software Engineering/AmazonWS/data"
 				
+def write_to_file(text):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+        print(f"Folder '{dir}' created!")
+    else:
+        print(f"Folder '{dir}' already exists.")
 
-			
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_path = os.path.join(dir, f"bikes_{now}.txt")
 
+    with open(file_path, "w") as f:
+        f.write(text)
 
+    print(f"File saved to: {file_path}")
 
+def fetch_api():
+	try:
+		r = requests.get(dbinfo.STATIONS_URI, params={"apiKey": dbinfo.JCKEY, "contract": dbinfo.NAME})
+		return r.text
+	except:
+		print(traceback.format_exc())
 
+def webscrape_to_db_and_download(engine):
+	while True:
+		try:
+			data = fetch_api()
+			write_to_file(data)
+			availability_to_db(data, engine)
+			time.sleep(5*60)
+		except Exception as e:
+			print('Error:', e)
 
+def main():
+	def interface():
+		print('***********************************************')
+		print('Database All-In-One interface')
+		print('***********************************************')
+		print('Actions:')
+		print('    1. Create stations & availability tables')
+		print('    2. Insert station data into database')
+		print('    3. Start webscraper')
+		print('    4. Exit programme')
+		print('***********************************************')
+		command = int(input('Select action: '))
+		return command
+	
+	action = interface()
+	data = fetch_api()
 
+	while action != 3 and action != 4:
+		if action == 1:
+			create_db(engine)
+			action = interface()
+		elif action == 2:
+			station_to_db(data, engine)
+			action = interface()
+	
+	if action == 3:
+		webscrape_to_db_and_download(engine)
+	elif action == 4:
+		print('Goodbye!')
+		sys.exit(0)
 
-
-
-
-
-
-
-
-
-#################################################################################################################
-'''
-connection.execute(sqla.text("""
-					INSERT INTO availability (number, available_bikes, available_bike_stands, last_update)
-					VALUES (:number, :available_bikes, :available_bike_stands, :last_update);
-				"""), {
-					"number": station.get('number'),
-					"available_bikes": int(station.get('available_bikes')),
-					"available_bike_stands": int(station.get('available_bike_stands')),
-					"last_update": format_timestamp,
-				})
-
-#Format last_update string to SQL friendly format
-		no_format_timestamp = station.get('last_update')
-		timestamp_ms = int(no_format_timestamp)
-		last_update_datetime = datetime.utcfromtimestamp(timestamp_ms / 1000)
-		format_timestamp = last_update_datetime.strftime('%Y-%m-%d %H:%M:%S')
-
-'''
+main()
