@@ -127,16 +127,3 @@ body {
 	display: none;
 	z-index: 1000;
 }
-
-#clickOff {
-	margin-top: 86px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	height: calc(100vh - 86px);
-	right: 300px;
-	background-color: transparent;
-	display: none;
-	z-index: 900;
-}
