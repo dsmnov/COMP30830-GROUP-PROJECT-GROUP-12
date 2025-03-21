@@ -55,7 +55,8 @@ async function initializeStations() {
 
       const infoWindow = new google.maps.InfoWindow();
 
-      marker.addEventListener("mouseover", async () => {
+      marker.addEventListener('mouseover', async () => {
+        map.setOptions({ draggableCursor: 'pointer' });
         const stationData = availData.find(data => data.number === marker.stationId);
         const availableBikes = stationData.available_bikes;
         const parkingStations = stationData.available_bike_stands;
@@ -67,8 +68,34 @@ async function initializeStations() {
         });
       });
 
-      marker.addEventListener("mouseout", () => {
-          infoWindow.close();
+      marker.addEventListener('mouseout', () => {
+        map.setOptions({ draggableCursor: 'grab' });
+        infoWindow.close();
+      });
+
+      marker.addEventListener('click', () => {
+
+        const stationData = availData.find(data => data.number === marker.stationId);
+        const availableBikes = stationData.available_bikes;
+        const parkingStations = stationData.available_bike_stands;
+
+        const locationWindow = document.getElementById('locationWindow');
+        const content = document.getElementById('windowContent');
+        const clickOff = document.getElementById('clickOff');
+
+        content.innerHTML = `
+          <h2>${title}</h2>
+          <p>Available Bikes: ${availableBikes}</p>
+          <p>Available Bike Stands: ${parkingStations}</p>`;
+
+        locationWindow.style.display = 'block';
+        clickOff.style.display = 'block';
+
+        clickOff.addEventListener('click', () => {
+          map.setOptions({ draggableCursor: 'grab' });
+          locationWindow.style.display = 'none';
+          clickOff.style.display = 'none';
+        });
       });
 
       markers.push(marker);

@@ -107,4 +107,36 @@ body {
     margin-top: 32px;
     height: calc(100vh - 92px);
     width: 100%;
+	cursor: grab;
+}
+
+#map:active {
+	cursor: grabbing;
+}
+
+#locationWindow {
+	margin-top: 86px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 300px;
+	height: calc(100vh - 86px);
+	background-color: white;
+	box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+	overflow-y: auto;
+	display: none;
+	z-index: 1000;
+}
+
+#clickOff {
+	margin-top: 86px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	height: calc(100vh - 86px);
+	right: 300px;
+	background-color: transparent;
+	display: none;
+	z-index: 900;
 }
