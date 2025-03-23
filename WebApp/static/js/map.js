@@ -75,7 +75,7 @@ async function initializeStations() {
         const parkingStations = stationData.available_bike_stands;
 
         marker.content.style.transition = "transform 0.1s ease";
-        marker.content.style.transform = "scale(1.1)";
+        marker.content.style.transform = "scale(1.15)";
         
         infoWindow.setContent(createInfoWindowContent(title, availableBikes, parkingStations));
         infoWindow.open({
