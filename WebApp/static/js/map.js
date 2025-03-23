@@ -73,6 +73,9 @@ async function initializeStations() {
         const stationData = availData.find(data => data.number === marker.stationId);
         const availableBikes = stationData.available_bikes;
         const parkingStations = stationData.available_bike_stands;
+
+        marker.content.style.transition = "transform 0.1s ease";
+        marker.content.style.transform = "scale(1.1)";
         
         infoWindow.setContent(createInfoWindowContent(title, availableBikes, parkingStations));
         infoWindow.open({
@@ -82,6 +85,9 @@ async function initializeStations() {
       });
 
       marker.addEventListener('mouseout', () => {
+        marker.content.style.transition = "transform 0.1s ease";
+        marker.content.style.transform = "scale(1)";
+
         map.setOptions({ draggableCursor: 'grab' });
         infoWindow.close();
       });
@@ -94,11 +100,88 @@ async function initializeStations() {
         windowContent.innerHTML = `
           <h2>${title}</h2>
           <p>Available Bikes: ${availableBikes}</p>
-          <p>Available Bike Stands: ${parkingStations}</p>`;
+          <p>Available Bike Stands: ${parkingStations}</p>
+
+          <h3>Plan a Journey</h3>
+          <label class = 'stationSearch'>
+            <input type = 'text' required id = 'stationInput' autocomplete = 'off' />
+            <span class = 'placeholder'>Select Destination</span>
+            <span id = 'errorMessage1'></span>
+            <span id = 'errorMessage2'></span>
+            <ul class = 'dropdown' id = 'stationDropdown'>
+          </label>
+        `;
 
         locationWindow.style.display = 'block';
         e.stopPropagation();
         isWindowOpen = true;
+
+        /* Searchable Select code taken from https://www.youtube.com/watch?v=lcXjEqGXv14&ab_channel=MazenSalah */
+        const input = document.getElementById('stationInput');
+        const dropdown = document.getElementById('stationDropdown');
+
+        function makeDropdown(filterText = '') {
+          dropdown.innerHTML = '';
+
+          const originData = availData.find(data => data.number == station.number);
+          const originBikes = originData.available_bikes
+
+          const filtered = data.filter(station =>
+            station.name.toLowerCase().includes(filterText)
+          );
+
+          if (filtered.length > 0) {
+            filtered.forEach(station => {
+              const li = document.createElement('li');
+              li.textContent = station.name;
+              li.dataset.lat = station.lat;
+              li.dataset.lng = station.lng;
+              li.dataset.number = station.number;
+              
+              li.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                input.value = station.name;
+                dropdown.style.display = 'none';
+                
+                const destinationCoords = { lat: li.dataset.lat, lng: li.dataset.lng }
+                getRouteData(coordinates, destinationCoords);
+
+                const destData = availData.find(data => data.number == li.dataset.number);
+                const destParking = destData.available_bike_stands
+
+                if (destParking < 3) {
+                  document.getElementById('errorMessage1').innerHTML = 'Warning: Destination has Low Parking Availability!';
+                }
+
+                if (originBikes < 3) {
+                  document.getElementById('errorMessage2').innerHTML = 'Warning: Origin has Low Bike Availability!';
+                }
+              });
+
+              dropdown.appendChild(li);
+            });
+
+            dropdown.style.display = 'block';
+          } else {
+            dropdown.style.display = 'none';
+          }
+        }
+
+        input.addEventListener('focus', () => {
+          makeDropdown('');
+        });
+
+        input.addEventListener('input', () => {
+          makeDropdown(input.value.toLowerCase());
+        });
+
+        document.addEventListener('click', (event) => {
+          if (!document.querySelector('.stationSearch')?.contains(event.target)) {
+            dropdown.style.display = 'none';
+          }
+        });
       });
 
       marker.addEventListener("mousedown", () => {
@@ -169,7 +252,6 @@ async function updateMarkersIcons() {
 
 async function initMap() {
   await prepMap();
-  getRouteData();
   setInterval(refreshAvailabilityData, 60000);
 }
 
