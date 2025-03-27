@@ -1,6 +1,6 @@
 let routePolyline = null;
 
-export async function getRouteData(origin, destination) {
+export async function getRouteData(origin, destination, map) {
     let availData;
 
     if (routePolyline) {

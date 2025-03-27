@@ -97,9 +97,11 @@ def get_route():
 
     try:
         r = requests.post(url, json=routes_body, headers=headers)
+        print("Google Routes response:", r.text)
         data = r.json()
         return jsonify(data)
     except Exception as e:
+        print("Routes error:", e)
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
