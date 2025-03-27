@@ -1,5 +1,6 @@
 /* Class based structuring taken from this documentation https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes */
 import { getRouteData } from './routes.js';
+import { markers } from './map.js';
 
 export class Marker {
     constructor(id, name, position, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData) {

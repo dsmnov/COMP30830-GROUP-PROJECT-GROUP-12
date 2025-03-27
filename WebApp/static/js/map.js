@@ -1,6 +1,6 @@
 import { Marker } from './markers.js';
 
-let markers = [];
+export let markers = [];
 
 async function initMap() {
     const position = { lat: 53.3484, lng: -6.2539 };
@@ -32,7 +32,7 @@ async function getAvailabilityData() {
     }
 }
 
-function initializeStationPanel() {
+async function initializeStationPanel() {
     const locationWindow = document.getElementById('locationWindow');
     const windowContent = document.getElementById('windowContent');
     let isWindowOpen = false;
@@ -54,7 +54,7 @@ async function main() {
     const stationData = await getStationData();
     let availabilityData = await getAvailabilityData();
 
-    const {locationWindow, windowContent, setIsWindowOpen} = initializeStationPanel();
+    const {locationWindow, windowContent, setIsWindowOpen} = await initializeStationPanel();
 
     stationData.forEach(station => {
         const newMarker = new Marker(station.number, station.name, { lat: station.lat, lng: station.lng }, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData);
