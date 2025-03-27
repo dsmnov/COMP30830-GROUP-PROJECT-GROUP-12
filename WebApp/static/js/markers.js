@@ -1,5 +1,4 @@
 /* Class based structuring taken from this documentation https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes */
-
 import { getRouteData } from './routes.js';
 
 export class Marker {
