@@ -1,4 +1,5 @@
 /* Class based structuring taken from this documentation https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes */
+/* Restructured entire Javascript code to this for improved readability and much easier to maintain */
 import { getRouteData } from './routes.js';
 import { markers } from './map.js';
 
@@ -95,6 +96,7 @@ export class Marker {
         let hue;
         let svgColor;
 
+        /* Old Color setting code
         if (occupancy >= 0.80) {
             hue = occupancy * 220;
         } else if (occupancy <= 0.15) {
@@ -109,7 +111,19 @@ export class Marker {
         else {
             svgColor = `hsl(${hue}, 80%, 70%)`;
         }
-        
+        */
+
+        /* Polynomial Interpolation for smooth color transition using WolframAlpha https://www.wolframalpha.com/ prompt(polynomial interpolation for (0,0), (0.15,30), (0.5,120), (0.85,185), (1,220))*/
+        /* Provides much better and more accurate colors based on station occupancy than my previous basic method */
+        hue = (132.749*occupancy) + (585.05*(occupancy**2)) + (-984.394*(occupancy**3)) + (486.595*(occupancy**4));
+
+        if (isNaN(occupancy)) {
+            svgColor = `hsl(0, 100%, 100%)`;
+        }
+        else {
+            svgColor = `hsl(${hue}, 80%, 70%)`;
+        }
+
         const pinSvg = this._getDefaultMarkerIcon(svgColor);
         this.marker.content = pinSvg.cloneNode(true);
     }
