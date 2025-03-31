@@ -38,10 +38,10 @@ async function initializeStationPanel() {
     let isWindowOpen = false;
   
     document.addEventListener('click', (event) => {
-      if (isWindowOpen && !locationWindow.contains(event.target)) {
-        locationWindow.style.display = 'none';
-        isWindowOpen = false;
-      }
+        if (isWindowOpen && !locationWindow.contains(event.target)) {
+            locationWindow.style.display = 'none';
+            isWindowOpen = false;
+        }
     });
   
     return {locationWindow, windowContent, setIsWindowOpen(value) {isWindowOpen = value;}};

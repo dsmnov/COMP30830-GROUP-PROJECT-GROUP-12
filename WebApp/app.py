@@ -56,9 +56,6 @@ def get_availability():
 
     return jsonify(availability)
 
-
-API_KEY = "AIzaSyAFdzfzeBk3A8ASwoklDgw2HG4n6ewF4Iw"
-
 @app.route('/api/routes', methods=['POST'])
 def get_route():
     body = request.json
@@ -103,6 +100,12 @@ def get_route():
     except Exception as e:
         print("Routes error:", e)
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/weather', methods=['GET'])
+def get_weather():
+    query = f'http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={long};from={date_from};to={date_to}'
+    
+    requests.get(query)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

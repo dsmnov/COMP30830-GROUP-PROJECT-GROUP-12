@@ -17,7 +17,6 @@ export async function getRouteData(origin, destination, map) {
       });
 
       availData = await availResponse.json();
-      console.log('Route Data aquired:', availData);
     } catch (error) {
       console.error('Route Data failed:', error);
     }
