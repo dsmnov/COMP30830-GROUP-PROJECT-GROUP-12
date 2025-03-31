@@ -101,11 +101,17 @@ def get_route():
         print("Routes error:", e)
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/weather', methods=['GET'])
+@app.route('/api/weather', methods=['POST'])
 def get_weather():
-    query = f'http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={long};from={date_from};to={date_to}'
+    data = request.get_json()
+    lat = data.get('lat', '54.7211')
+    long = data.get('lng', '-8.7237')
+    time = data.get('time', '2025-03-31T22:00:00Z') 
+
+    query = f'http://openaccess.pf.api.met.ie/metno-wdb2ts/locationforecast?lat={lat};long={long};from={time};to={time}'
     
-    requests.get(query)
+    response = requests.get(query)
+    return response.text
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

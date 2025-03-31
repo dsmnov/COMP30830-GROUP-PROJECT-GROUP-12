@@ -2,6 +2,10 @@
 /* Restructured entire Javascript code to this for improved readability and much easier to maintain */
 import { getRouteData } from './routes.js';
 import { markers } from './map.js';
+import { getWeatherData } from './weather.js';
+
+// TEST WEATHER DATA DISPLAYED WITHIN STATION PANEL, DONT FORGET TO REMOVE
+let weatherData = await getWeatherData();
 
 export class Marker {
     constructor(id, name, position, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData) {
@@ -138,9 +142,11 @@ export class Marker {
 
     _addStationPanel() {
         const originMarker = this;
-
         this.marker.addEventListener('click', (e) => {
             windowContent.innerHTML = `
+                <h3>Test Weather Data</h3>
+                <p>Temperature: ${weatherData.temperature} Celsius</p>
+                <p>Humidity: ${weatherData.humidity}%</p>
                 <h2>${this.name}</h2>
                 <p>Available Bikes: ${this.availableBikes}</p>
                 <p>Available Bike Stands: ${this.availableParking}</p>    
@@ -151,7 +157,9 @@ export class Marker {
                         <span id = 'errorMessage1'></span>
                         <span id = 'errorMessage2'></span>
                         <ul class = 'dropdown' id = 'stationDropdown'>
-                    </label>`;
+                    </label>
+                `;
+                
         
             this.locationWindow.style.display = 'block';
             this.setIsWindowOpen(true);

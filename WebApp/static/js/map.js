@@ -1,5 +1,4 @@
 import { Marker } from './markers.js';
-
 export let markers = [];
 
 async function initMap() {
