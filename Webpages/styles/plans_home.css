@@ -1,0 +1,78 @@
+.plans_wrapper_section{
+	display: flex;
+	flex-direction: column;
+}
+.plans_wrapper{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	margin-top: 2rem;
+}
+.plans{
+	/* position:relative; */
+	display:flex;
+	gap:1rem;
+	height:400px;
+	justify-content: center;
+}
+.day_tickets{
+	border-radius: 10px;
+	background: #fff;
+	padding-inline:2rem;
+	box-shadow: 0 0 5px 1px rgb(161, 152, 152);
+	transition: transform 500ms ease-in-out;
+}
+.ticket_content{
+	display: flex;
+	flex-direction: column;
+	gap:1rem;
+	justify-content: center;
+	padding:0.5rem;
+}
+.ticket_content h3{
+	display: flex;
+	justify-content: center;
+}
+.day_tickets .info{
+	text-transform: uppercase;	
+}
+
+.day_tickets p{
+	color:grey;
+	text-align: center;
+}
+.day_tickets img {
+	height:200px;
+	width: 100%;
+	/* opacity: 0; */
+	background: transparent;
+	/* border:1px solid red; */
+	/* transform: translate(0, -1.5rem); */
+	filter: drop-shadow(0px 6px 4px rgba(54, 57, 66, 0.4));
+  }
+
+  .ticket_features hr{
+		width:100%;
+		border-top: 0.5px solid #e9e0e0;
+  }
+
+  .day_tickets:hover{
+	transform: scale(1.05);
+  }
+
+  
+  @media (max-width:768px){
+	.plans_wrapper{
+		flex-direction: column;
+		align-items: center;
+		gap:2rem;
+	}
+	.plans,
+	.day_tickets{
+		flex-direction: column;
+		flex:1 1 100%;
+		max-width:100%;
+		margin-inline: auto;
+		margin-bottom: 2rem;
+	}
+  }
