@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Dublin by Bike | Dublin Bikes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/styles.css') }}">
+
+  </head>
+
+  <body>
+    <!-- Header -->
+  <header class="main-header">
+    <div class="header-inner container">
+      <a href="{{ url_for('home') }}" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
+      </a>
+
+      <nav class="main-nav">
+        <a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a>
+        <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
+        <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
+        <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
+        <a href="#" class="nav-link">Log In</a>
+
+        <div class="join-button">
+          <a href="#" class="btn">Join</a>
+        </div>
+        
+        <div class="language-selector">
+          <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
+          <p>EN</p>
+        </div>
+        
+        <button id="menuToggle" class="menu-toggle">
+          <img src="{{ url_for('static', filename='assets/toggle-menu.svg') }}" alt="Menu" />
+        </button>
+      </nav>
+    </div>
+  
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+      <div class="mobile-header">
+        <a href="./home.html" class="logo-link">
+          <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
+        </a>
+        
+        <div class="mobile-nav-right">
+          <a href="#" class="btn">Join</a>
+          <button id="closeMenu" class="close-menu">
+            <img src="{{ url_for('static', filename='assets/close_menu.svg') }}" alt="Close" />
+          </button>
+        </div>
+      </div>
+
+      <ul class="mobile-links">
+        <li><a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a></li>
+        <li><a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a></li>
+        <li><a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a></li>
+        <li><a href="#">Trip Planner</a></li>
+        <li><a href="#">Log In</a></li>
+      </ul>
+
+      <div class="mobile-language">
+        <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
+        <p>EN</p>
+      </div>
+    </div>
+  </header>
+<!-- Hero: Explore Dublin -->
+<section class="explore-hero-section ">
+  <div class="explore-hero-wrapper container">
+    <div class="explore-hero-content">
+      <span class="explore-hero-label">EXPLORE DUBLIN</span>
+      <h1 class="explore-hero-title">
+        See the sights.<br />
+        All of ‘em.
+      </h1>
+      <a href="#" class="btn">Download the app</a>
+    </div>
+
+    <div class="explore-hero-image">
+      <img src="{{ url_for('static', filename='assets/cyclists.jpg') }}" alt="Explore Dublin" />
+    </div>
+  </div>
+</section>
+
+<!-- Section: We Dare You to Bike It All -->
+<section class="bike-dare">
+  <div class="bike-dare-wrapper container">
+    <h2 class="bike-dare-title">We dare you to bike it all</h2>
+    <p class="bike-dare-text">
+      With over 190 kms of bike lanes across Dublin, Dublin Bikes is the perfect way 
+      to explore the city. From historic streets to scenic canals, discover your favorite routes below.
+    </p>
+  </div>
+</section>
+
+<!-- Section: Getting Around Is a Breeze -->
+<section class="station-search">
+  <div class="station-search-wrapper container">
+    <h2 class="station-title">Getting around is a breeze</h2>
+    <p class="station-subtext">
+      Check out the map and see how easy it is to get where you want to go.
+    </p>
+
+    <div class="station-search-bar">
+      <input
+        type="text"
+        placeholder="Enter a station name, street name, or address"
+      />
+      <img src="{{ url_for('static', filename='assets/search_icon.svg') }}" alt="Search icon" />
+    </div>
+
+    <div class="station-map">
+      <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d152515.36595716688!2d-6.410513919791764!3d53.32441163009948!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48670e80ea27ac2f%3A0xa00c7a9973171a0!2sDublin%2C%20Ireland!5e0!3m2!1sen!2s!4v1742842639827!5m2!1sen!2s"
+      width="100%"
+      height="496"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>    
+    </div>
+  </div>
+</section>
+
+<!-- Section: Get Out and Ride -->
+<section class="ride-out">
+  <div class="ride-out-wrapper container">
+    <!-- Title + Subtext -->
+    <h2 class="ride-out-title">Get out and ride</h2>
+    <p class="ride-out-intro">
+      Wherever your day takes you, Dublin Bikes can get you there – and to a coffee stop in between.
+    </p>
+
+    <!-- Two-Column Ride Options -->
+    <div class="ride-out-grid">
+      <ul class="ride-out-list">
+        <li>
+          <strong>Phoenix Park Loop</strong><br />
+          A local favorite. Scenic, peaceful, and completely car-free — it's one of Europe’s largest city parks and perfect for cruising.
+        </li>
+        <li>
+          <strong>Grand Canal Greenway</strong><br />
+          Glide past calm waters and leafy paths as you cycle along the Grand Canal. A quiet, refreshing escape right in the city.
+        </li>
+        <li>
+          <strong>Samuel Beckett Bridge to Docklands</strong><br />
+          Ride riverside along modern glass and steel, through Dublin’s ever-evolving Docklands. Big views. Bigger vibes.
+        </li>
+      </ul>
+      <ul class="ride-out-list">
+        <li>
+          <strong>Howth Coastal Ride</strong><br />
+          Start in the city, end by the sea. This ride rewards you with epic coastal views, cliff paths, and some of the best seafood around.
+        </li>
+        <li>
+          <strong>St. Stephen's Green & Grafton Street</strong><br />
+          Bike your way through Georgian streets and blooming gardens, then park nearby and explore the heart of Dublin on foot.
+        </li>
+        <li>
+          <strong>Royal Canal Way</strong><br />
+          Cycle along this peaceful path that traces the canal from the heart of the city to the northwestern suburbs. 
+          A quiet, scenic ride dotted with bridges, locks, and unexpected charm.
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- Section: Get to Know Dublin -->
+<section class="know-dublin">
+  <div class="know-dublin-wrapper container">
+    <!-- Left Column -->
+    <div class="know-dublin-left">
+      <h2 class="know-dublin-title">Get to know Dublin</h2>
+      <p class="know-dublin-subtitle">
+        Discover more about Dublin's attractions, cycling routes, and events.
+      </p>
+
+      <div class="know-dublin-items">
+        <!-- Item 1 -->
+        <div class="know-dublin-item">
+          <img src="{{ url_for('static', filename='assets/blog_icon.svg') }}" alt="blog icon" />
+          <div class="know-dublin-info">
+            <a href="https://www.visitdublin.com/things-to-do" target="_blank" class="know-dublin-btn">
+              Things to see and DO
+            </a>
+            <p>Find out the latest news and learn about important updates.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="know-dublin-item">
+          <img src="{{ url_for('static', filename='assets/calendar_icon.svg') }}" alt="calendar icon" />
+          <div class="know-dublin-info">
+            <a href="https://www.visitdublin.com/events" target="_blank" class="know-dublin-btn">
+              Festivals and Events
+            </a>
+            <p>Stay updated on Dublin’s cultural events, concerts and celebrations.</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="know-dublin-item">
+          <img src="{{ url_for('static', filename='assets/chart_icon.svg') }}" alt="chart icon" />
+          <div class="know-dublin-info">
+            <a href="https://www.visitdublin.com/guides/cycling" target="_blank" class="know-dublin-btn">
+              Cycling in Dublin
+            </a>
+            <p>Learn about the best bike routes and cycling-friendly areas in the city.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="know-dublin-right">
+      <picture>
+        <source media="(max-width: 768px)" srcset="./assets/9.webp" />
+        <img src="{{ url_for('static', filename='assets/IFSCDublin.jpg') }}" alt="Get to know Dublin visual" loading="lazy" />
+      </picture>
+    </div>
+  </div>
+</section>
+
+<!-- Section: Ready. Set. Ride. -->
+<section class="cta-section">
+  <div class="cta-wrapper container">
+    <!-- Text Content (Left on desktop) -->
+    <div class="cta-text">
+      <h2>Ready. Set. Ride.</h2>
+      <p>
+        Sign up for a subscription or download the app to get started with a subscription, or day ticket.
+      </p>
+
+      <div class="cta-buttons-inline">
+        <a href="#" class="btn">Download the app</a>
+        <a href="#" class="cta-link"></a>
+          Sign up for a subscription
+          <img src="{{ url_for('static', filename='assets/right_arrow.svg') }}" alt="Arrow icon" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Image (Right on desktop) -->
+    <div class="cta-image">
+      <img src="{{ url_for('static', filename='assets/logo-velo-vls.svg') }}" alt="Dublin Bikes Promo" />
+    </div>
+  </div>
+</section>
+<!-- Footer -->
+<footer class="site-footer">
+  <p class="footer-text">© 2025 Dublin Bikes. All rights reserved</p>
+</footer>
+
+</html>

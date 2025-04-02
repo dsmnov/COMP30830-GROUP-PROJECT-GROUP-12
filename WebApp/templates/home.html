@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dublin Bikes: Dublin’s Most Popular Bike Rental Program</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/plans_home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/styles.css') }}">
+  
+</head>
+<body>
+  <!-- Header -->
+  <header class="main-header">
+    <div class="header-inner container">
+      <a href="{{ url_for('home') }}" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
+      </a>
+
+      <nav class="main-nav">
+        <a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a>
+        <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
+        <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
+        <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
+        <a href="#" class="nav-link">Log In</a>
+
+        <div class="join-button">
+          <a href="#" class="btn">Join</a>
+        </div>
+        
+        <div class="language-selector">
+          <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
+          <p>EN</p>
+        </div>
+        
+        <button id="menuToggle" class="menu-toggle">
+          <img src="{{ url_for('static', filename='assets/toggle-menu.svg') }}" alt="Menu" />
+        </button>
+      </nav>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+      <div class="mobile-header">
+        <a href="./home.html" class="logo-link">
+          <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
+        </a>
+        
+        <div class="mobile-nav-right">
+          <a href="#" class="btn">Join</a>
+          <button id="closeMenu" class="close-menu">
+            <img src="{{ url_for('static', filename='assets/close_menu.svg') }}" alt="Close" />
+          </button>
+        </div>
+      </div>
+
+      <ul class="mobile-links">
+        <li><a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a></li>
+        <li><a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a></li>
+        <li><a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a></li>
+        <li><a href="#">Trip Planner</a></li>
+        <li><a href="#">Log In</a></li>
+      </ul>
+
+      <div class="mobile-language">
+        <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
+        <p>EN</p>
+      </div>
+    </div>
+  </header>
+    <div class="hero ">
+        <div class="background"></div>
+        <div class = 'wrapper'>
+                <h1>Dublin Bikes</h1>
+        </div>
+    </div>
+    <main>
+        <section class="maps_wrapper container container-gap ">
+                <div class="title_wrapper">
+                    <h1 class="title">Maps & Stations</h1>
+                </div>
+                <div class="maps">
+                    <img src="{{ url_for('static', filename='assets/maps.png') }}" alt="map">
+                    <a href="#" class="button btn">View stations</a>
+                </div>
+        </section>
+        
+       <section class="plans_wrapper_section container container-gap ">
+        <div class="title_wrapper">
+            <h1 class="title">plans & pricing</h1>
+        </div>
+            <div class="plans_wrapper">
+              <div class="plans container container-gap">
+                <div class="day_tickets one">
+                    <div class="ticket_content">
+                        <div class="ticket_header">
+                            <h3 class="info">1 day ticket</h3>
+                            <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
+                        </div>
+                    <div class="ticket_features">
+                        <hr>
+                        <p>Helmet Included</p>
+                        <p>Free Basket Add-on</p>
+                        <hr>
+                    </div>
+                        <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+                    </div>
+                   
+                </div>
+            
+          
+            <div class="day_tickets three">
+                
+                <div class="ticket_content">
+                    <div class="ticket_header">
+                        <h3 class="info">1 day ticket</h3>
+                        <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
+                    </div>
+                    
+                    <div class="ticket_features">
+                        <hr>
+                        <p>Helmet & Lock Included</p>
+                        <p>Paid Maintenance Support</p>
+                        <hr>
+                    </div>
+                   
+                    <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+                   
+                   
+                </div>
+            </div>
+          
+           
+            <div class="day_tickets annual">
+                
+                <div class="ticket_content">
+                    <div class="ticket_header">
+                        <h3 class="info">1 day ticket</h3>
+                        <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
+                    </div>
+                    
+                    <div class="ticket_features">
+                    <hr>
+                    <p>Helmet & Lock Included</p>
+                    <p>Free Maintenance Checkup</p>
+                    <hr>
+                    </div>
+                    <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+                </div>
+            </div>
+           
+           
+        </div>
+            </div>
+           
+        
+       </section>
+      <!-- Ride Experience Section -->
+  <section class="hero-section container container-gap ">
+	<div class="hero-wrapper container">
+	  <div class="hero-content">
+		<h1 class=" title">Ride Experience</h1>
+		<span class="hero-heading">Get to know Dublin Bikes</span>
+		<a href="{{ url_for('ride') }}" class="btn">View More</a>
+	  </div>
+
+	  <div class="hero-image">
+		<img src="{{ url_for('static', filename='assets/Dublin_Bikes.jpg') }}" alt="Ride Experience" loading="lazy" />
+	  </div>
+	</div>
+  </section>
+        <section class="how-it-works container container-gap ">
+            <div class="how-wrapper container">
+              <h2 class="how-title title">How it works</h2>
+          
+              <div class="how-grid">
+                <!-- Step 1 -->
+                <div class="how-step">
+                  <a href="#">
+                    <img src="{{ url_for('static', filename='assets/illustration-enpratique-01.svg') }}" alt="Rent a bike" />
+                  </a>
+                  <h3 class="how-step-title">Rent a bike</h3>
+                  <p class="how-step-text">
+                    Use the Dublin Bikes app or your key to unlock and start your ride.
+                  </p>
+                </div>
+          
+                <!-- Step 2 -->
+          <div class="how-step">
+            <a href="#">
+              <img src="{{ url_for('static', filename='assets/illustration-enpratique-02.svg') }}" alt="Ride your way" />
+            </a>
+            <h3 class="how-step-title">Ride your way</h3>
+            <p class="how-step-text">
+              Cruise around town or get to your destination fast.
+            </p>
+          </div>
+          
+          <!-- Step 3 -->
+          <div class="how-step">
+            <a href="#">
+              <img src="{{ url_for('static', filename='assets/illustration-enpratique-03.svg') }}" alt="Return anywhere" />
+            </a>
+            <h3 class="how-step-title">Return anywhere</h3>
+            <p class="how-step-text">
+              Park at any Dublin Bikes station across the city when you're done.
+            </p>
+          </div>
+          
+              </div>
+            </div>
+          </section>
+          <!-- Hero: Explore Dublin -->
+<section class="explore-hero-section container container-gap ">
+    <div class="explore-hero-wrapper container">
+      <div class="explore-hero-content">
+        <h1 class="explore-hero-label title">EXPLORE DUBLIN</h1>
+        <h1 class="explore-hero-title ">
+          See the sights.<br />
+          All of ‘em.
+        </h1>
+        <a href="{{ url_for('explore') }}" class="btn">View More</a>
+      </div>
+  
+      <div class="explore-hero-image">
+        <img src="{{ url_for('static', filename='assets/cyclists.jpg') }}" alt="Explore Dublin" />
+      </div>
+    </div>
+  </section>
+    </main>
+    <footer class="footer  ">
+        <div class="nav-bar container">
+    
+            <ul class="nav">
+                <li class="linked">
+                    <a href="#" class="vertical-line">|</a>
+                    <a href="#" class="link-text">Links</a>
+                </li>
+                <li><a href="#">Home</a></li>
+                <li><a href="{{ url_for('journeyplan') }}">Journey Planner</a></li>
+                <li><a href="{{ url_for('ride') }}">Ride Experience</a></li>
+                <li><a href="{{ url_for('plans') }}">Plans and Pricing</a></li>
+                <li><a href="{{ url_for('explore') }}">Explore Dublin</a></li> 
+               
+            </ul>
+            <ul class="nav footer-logo">
+                <!-- <li><a id = 'logo1' class="footer-logo-1"></a></li>
+                <li><a id = 'logo2' class="footer-logo-2"></a></li> -->
+                <img src="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" alt="">
+            </ul>
+            <ul class="nav nav_1">
+                <li class="linked">
+                    <a href="#" class="vertical-line">|</a>
+                    <a href="#" class="link-text">Cancellation</a></li>
+                <li><a href="#">Cancellation Policy</a></li>
+                <li><a href="#">Terms of service</a></li>
+            </ul>
+           
+        </div>
+
+        <hr>
+        <div class="copyright">
+            <p class="info">@Group 12- All rights reserved</p></div>
+    </footer>
+
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+    color: white;
+    font-family: "ProximaNova-regular", sans-serif;
+    font-size: 14px;
+}
+
+.footer {
+    width: 100%;
+    background-color: #0c0b31;
+    color: #ffffff;
+    padding-bottom: 0.5rem;
+}
+
+.nav-bar{
+    display:flex;
+    flex-direction: column;
+    gap:2rem;
+    align-items: center;
+}
+
+.nav{
+    margin-top: 1rem;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    gap:0.5rem;
+    letter-spacing: 1.15px;
+    margin-bottom: 1rem;
+}
+
+.linked {
+    display:flex;
+    gap:0.2rem;
+}
+
+.vertical-line:link,
+a.link-text:link {
+    color:rgba(244, 210, 210, 0.932);
+}
+
+.nav li a{
+    transition:all 0.1s ease-in-out;
+}
+
+.nav li a:hover {
+	color: #000000;
+    /* color:orange; */
+	font-weight: bold;
+  
+}
+
+.footer a{
+    color: #ffffff;
+}
+
+.footer hr{
+    background:#7b8baf;
+    height:1px;
+    border:none;
+}
+
+.copyright .info{
+    color:rgba(244, 210, 210, 0.932);
+    letter-spacing: 1.15px;
+    text-transform: uppercase;
+    font-size:10px;
+    text-align: center;
+    display: flex;
+    width:100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.nav{
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap:0.5rem;
+    letter-spacing: 1.15px;
+}
+
+.footer-logo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:100px;
+}
+
+@media (min-width:640px){
+    .nav-bar{
+        flex-direction: row;
+        justify-content: center;
+        gap:15rem;
+    }
+}

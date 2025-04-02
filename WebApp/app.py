@@ -29,12 +29,24 @@ app = Flask(__name__, template_folder="templates")
 CORS(app)
 
 @app.route("/")
-def index():
-    return render_template("index.html")
+def home():
+    return render_template("home.html")
 
-@app.route("/map")
-def map_page():
-    return render_template("map.html")
+@app.route("/explore")
+def explore():
+    return render_template("explore.html")
+
+@app.route("/plans")
+def plans():
+    return render_template("plans.html")
+
+@app.route("/ride")
+def ride():
+    return render_template("ride.html")
+
+@app.route("/journeyplan")
+def journeyplan():
+    return render_template("journeyplan.html")
 
 @app.route('/api/stations', methods=['GET'])
 def get_stations():
