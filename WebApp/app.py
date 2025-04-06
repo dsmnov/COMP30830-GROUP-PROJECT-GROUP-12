@@ -58,6 +58,10 @@ def explore():
 def plans():
     return render_template("plans.html")
 
+@app.route("/predict-test")
+def predict_test():
+    return render_template("predict_test.html")
+
 @app.route("/ride")
 def ride():
     return render_template("ride.html")
