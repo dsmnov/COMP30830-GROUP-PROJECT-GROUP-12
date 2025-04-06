@@ -43,12 +43,12 @@
         <button type="submit">Predict</button>
     </form>
 
-    <h2 id="result"></h2>
+    <h2 id="result">Prediction will appear here...</h2>
 
     <script>
-        document.getElementById("predictForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
+        function sendPredictionRequest() {
+            const form = document.getElementById("predictForm");
+            const formData = new FormData(form);
             const jsonData = {};
             formData.forEach((value, key) => { jsonData[key] = parseFloat(value); });
 
@@ -64,7 +64,17 @@
             .catch(error => {
                 document.getElementById("result").innerText = "Error: " + error;
             });
+        }
+
+        document.getElementById("predictForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            sendPredictionRequest();
         });
+
+        // 🔁 Auto-refresh prediction every 90 seconds
+        setInterval(() => {
+            sendPredictionRequest();
+        }, 90000);
     </script>
 </body>
 </html>
