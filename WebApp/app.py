@@ -15,6 +15,8 @@ import datetime
 import time
 import os
 import pymysql
+import joblib
+import numpy as np
 
 # Login Functionality imports along flask SQLite imports - SQLite is only used for the login system.
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -38,6 +40,11 @@ instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instan
 # Start of Flask backend running code
 app = Flask(__name__, template_folder="templates", instance_relative_config=True, instance_path=instance_path)
 CORS(app)
+
+# Load ML models
+regression_model = joblib.load("WebApp/regression_model.pkl")
+classification_model = joblib.load("WebApp/classification_model.pkl")
+forecast_model = joblib.load("WebApp/forecast_model.pkl")
 
 @app.route("/")
 def home():
@@ -228,6 +235,35 @@ def register():
         return render_template('registration_success.html', username=form.username.data)
 
     return render_template('register_account.html', form=form)
+
+@app.route('/predict', methods=['POST'])
+def predict_bikes():
+    data = request.json
+    features = np.array([[
+        data['station_id'], data['hour'], data['day'], data['month'], data['year'],
+        data['max_temp'], data['min_temp'], data['max_humidity'], data['min_humidity'],
+        data['max_pressure'], data['min_pressure']
+    ]])
+    prediction = regression_model.predict(features)
+    return jsonify({'predicted_bikes': int(prediction[0])})
+
+@app.route('/classify', methods=['POST'])
+def classify_bike_availability():
+    data = request.json
+    features = np.array([[
+        data['station_id'], data['hour'], data['day'], data['month'], data['year'],
+        data['max_temp'], data['min_temp'], data['max_humidity'], data['min_humidity'],
+        data['max_pressure'], data['min_pressure']
+    ]])
+    prediction = classification_model.predict(features)
+    return jsonify({'bike_available': bool(prediction[0])})
+
+@app.route('/forecast', methods=['POST'])
+def forecast_bikes():
+    # Assume forecast model was trained on hourly data for station 32
+    forecast = forecast_model.predict(forecast_model.fh)
+    forecast_list = forecast.tolist()
+    return jsonify({'forecast': forecast_list})
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
