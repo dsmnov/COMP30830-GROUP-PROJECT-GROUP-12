@@ -60,6 +60,10 @@ def get_availability():
         availability = [dict(row) for row in result.mappings()]
     return jsonify(availability)
 
+@app.route("/predictor_weather_demo")
+def predictor_weather_demo():
+    return render_template("predictor_weather_demo.html")
+
 # New prediction endpoint
 @app.route('/api/predict_availability', methods=['POST'])
 def predict_availability():
