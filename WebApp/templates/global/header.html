@@ -1,0 +1,28 @@
+<header class="main-header">
+    <div class="header-inner container">
+      <a href="{{ url_for('home') }}" class="logo-link">
+        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
+      </a>
+
+      <nav class="main-nav">
+        <a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a>
+        <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
+        <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
+        <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
+        <a class="nav-link" id = 'log-in-button' data-login = 'login'>Log In</a>
+
+        <div class="join-button">
+          <a class="btn" id = 'register-button' data-register = 'register'>Join</a>
+        </div>
+        
+        <div class="language-selector">
+          <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
+          <p>EN</p>
+        </div>
+        
+        <button id="menuToggle" class="menu-toggle">
+          <img src="{{ url_for('static', filename='assets/toggle-menu.svg') }}" alt="Menu" />
+        </button>
+      </nav>
+    </div>
+</header>

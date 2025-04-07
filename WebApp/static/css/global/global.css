@@ -1,0 +1,127 @@
+/* Font Imports */
+@font-face {
+    font-family: "ProximaNova-regular";
+    src: url("../fonts/proximanova_regular.ttf") format("opentype");
+}
+
+@font-face {
+    font-family: "ProximaNova-Bold";
+    src: url("../fonts/proximanova_bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "lyftpro-Bold";
+    src: url("../fonts/lyftpro-bold.otf") format("opentype");
+}
+
+/* Global Formatting */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body,   h1,     h2,     h3,
+h4,     h5,     p,      img,
+i,      ul,     picture,
+figure {
+    margin:0;
+    padding:0;
+    user-select: none;
+	font-family: "ProximaNova-Bold";
+}
+
+p, li, ul, a {
+	font-family: "ProximaNova-regular";
+}
+
+img,    picture {
+    max-width: 100%;
+    display: block;
+}
+
+a {
+    color:inherit;
+    text-decoration: none;
+}
+
+li {
+	list-style: none;
+}
+
+.button {
+	background-color: #334; 
+	color: white;
+	padding-inline:15px;
+	padding-top:6px;
+	padding-bottom:6px;
+	border:0;
+	border-radius:18px;
+	text-transform: uppercase;
+	display: block;
+	margin-inline: auto;
+}
+
+.btn,
+.button {
+    background-color: #334; 
+	color: white;
+	padding: 0 24px;
+	min-height: 48px;
+	min-width: 120px;
+	border-radius: 100px;
+	font-weight: 700;
+	font-size: 20px;
+	line-height: 24px;
+	font-family: "ProximaNova-Bold", sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+	transition: opacity 0.2s ease;
+	width: fit-content;
+}
+  
+.btn:hover,.button:hover {
+	opacity: 0.9;
+}
+  
+.proxn-f {
+    font-family: "ProximaNova-regular", sans-serif;
+}
+
+.proxn-b {
+    font-family: "ProximaNova-Bold", sans-serif;
+}
+
+.lyftpro-f {
+    font-family: "lyftpro-Bold", sans-serif;
+}
+
+html{
+	min-height:100dvh;
+	position: relative;
+    width:100%;
+}
+
+body{
+	min-height: 100dvh;
+	clear: both;
+    width:100%;
+}
+
+.container-gap{
+	margin-top: 2rem;
+}
+
+/* Section Divider */
+.section-divider {
+	width: 100%;
+	height: 1px;
+	background-color: #0c0b3129;
+	margin: 40px 0;
+}

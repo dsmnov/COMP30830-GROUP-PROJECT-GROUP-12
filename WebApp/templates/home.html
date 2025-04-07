@@ -3,72 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dublin Bikes: Dublin’s Most Popular Bike Rental Program</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/footer.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/plans_home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/home.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/styles.css') }}">
-    <script defer type="module" src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <title>Home | Dublin Bikes</title>
+    <link rel="icon" href="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" type="image/svg+xml">
+
+    <!-- Global CSS and Global Script Imports -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/footer.css') }}">
+    <script defer type="module" src="{{ url_for('static', filename='js/user-system.js') }}"></script>
+
+    <!-- Content Specific CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
 </head>
 <body>
+
   <!-- Header -->
-  <header class="main-header">
-    <div class="header-inner container">
-      <a href="{{ url_for('home') }}" class="logo-link">
-        <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
-      </a>
+  {% include 'global/header.html' %}
 
-      <nav class="main-nav">
-        <a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a>
-        <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
-        <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
-        <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
-        <a class="nav-link" id = 'log-in-button' data-login = 'login'>Log In</a>
-
-        <div class="join-button">
-          <a class="btn" id = 'register-button' data-register = 'register'>Join</a>
-        </div>
-        
-        <div class="language-selector">
-          <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
-          <p>EN</p>
-        </div>
-        
-        <button id="menuToggle" class="menu-toggle">
-          <img src="{{ url_for('static', filename='assets/toggle-menu.svg') }}" alt="Menu" />
-        </button>
-      </nav>
-    </div>
-
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav" id="mobileNav">
-      <div class="mobile-header">
-        <a href="./home.html" class="logo-link">
-          <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Dublin Bikes logo" class="logo-img" />
-        </a>
-        
-        <div class="mobile-nav-right">
-          <a href="#" class="btn">Join</a>
-          <button id="closeMenu" class="close-menu">
-            <img src="{{ url_for('static', filename='assets/close_menu.svg') }}" alt="Close" />
-          </button>
-        </div>
-      </div>
-
-      <ul class="mobile-links">
-        <li><a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a></li>
-        <li><a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a></li>
-        <li><a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a></li>
-        <li><a href="#">Trip Planner</a></li>
-        <li><a href="#">Log In</a></li>
-      </ul>
-
-      <div class="mobile-language">
-        <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
-        <p>EN</p>
-      </div>
-    </div>
-  </header>
     <div class="hero ">
         <div class="background"></div>
         <div class = 'wrapper'>
@@ -157,13 +109,13 @@
         
        </section>
       <!-- Ride Experience Section -->
-  <section class="hero-section container container-gap ">
-	<div class="hero-wrapper container">
-	  <div class="hero-content">
-		<h1 class=" title">Ride Experience</h1>
-		<span class="hero-heading">Get to know Dublin Bikes</span>
-		<a href="{{ url_for('ride') }}" class="btn">View More</a>
-	  </div>
+      <section class="hero-section container container-gap ">
+	      <div class="hero-wrapper container">
+	        <div class="hero-content">
+		        <h1 class=" title">Ride Experience</h1>
+		        <span class="hero-heading">Get to know Dublin Bikes</span>
+		        <a href="{{ url_for('ride') }}" class="btn">View More</a>
+	        </div>
 
 	  <div class="hero-image">
 		<img src="{{ url_for('static', filename='assets/Dublin_Bikes.jpg') }}" alt="Ride Experience" loading="lazy" />
@@ -229,40 +181,9 @@
     </div>
   </section>
     </main>
-    <footer class="footer  ">
-        <div class="nav-bar container">
-    
-            <ul class="nav">
-                <li class="linked">
-                    <a href="#" class="vertical-line">|</a>
-                    <a href="#" class="link-text">Links</a>
-                </li>
-                <li><a href="#">Home</a></li>
-                <li><a href="{{ url_for('journeyplan') }}">Journey Planner</a></li>
-                <li><a href="{{ url_for('ride') }}">Ride Experience</a></li>
-                <li><a href="{{ url_for('plans') }}">Plans and Pricing</a></li>
-                <li><a href="{{ url_for('explore') }}">Explore Dublin</a></li> 
-               
-            </ul>
-            <ul class="nav footer-logo">
-                <!-- <li><a id = 'logo1' class="footer-logo-1"></a></li>
-                <li><a id = 'logo2' class="footer-logo-2"></a></li> -->
-                <img src="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" alt="">
-            </ul>
-            <ul class="nav nav_1">
-                <li class="linked">
-                    <a href="#" class="vertical-line">|</a>
-                    <a href="#" class="link-text">Cancellation</a></li>
-                <li><a href="#">Cancellation Policy</a></li>
-                <li><a href="#">Terms of service</a></li>
-            </ul>
-           
-        </div>
 
-        <hr>
-        <div class="copyright">
-            <p class="info">@Group 12- All rights reserved</p></div>
-    </footer>
+  <!-- Footer -->
+  {% include 'global/footer.html' %}
 
 </body>
 </html>

@@ -210,9 +210,9 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return render_template('login_success.html', username=form.username.data)
+                return render_template('user-system/login_success.html', username=form.username.data)
 
-    return render_template('login_account.html', form=form)
+    return render_template('user-system/login_account.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -225,9 +225,9 @@ def register():
         users_db.session.add(new_user)
         users_db.session.commit()
 
-        return render_template('registration_success.html', username=form.username.data)
+        return render_template('user-system/registration_success.html', username=form.username.data)
 
-    return render_template('register_account.html', form=form)
+    return render_template('user-system/register_account.html', form=form)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

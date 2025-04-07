@@ -1,13 +1,13 @@
 <h2>Test Register</h2>
 
-<form method = "POST" action = "{{ url_for('register') }}">
+<form method = 'POST' action = "{{ url_for('register') }}">
     {{ form.hidden_tag() }}
     
     <div>
         {{ form.username.label }}:
         {{ form.username(size=20) }}
         {% for error in form.username.errors %}
-          <div style="color: red;">{{ error }}</div>
+          <div style = 'color: red;'>{{ error }}</div>
         {% endfor %}
     </div>
     
@@ -15,7 +15,7 @@
         {{ form.password.label }}:
         {{ form.password(size=20) }}
         {% for error in form.password.errors %}
-          <div style="color: red;">{{ error }}</div>
+          <div style = 'color: red;'>{{ error }}</div>
         {% endfor %}
     </div>
 

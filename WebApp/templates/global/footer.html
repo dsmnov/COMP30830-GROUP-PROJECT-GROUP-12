@@ -1,0 +1,33 @@
+<footer class="footer  ">
+    <div class="nav-bar container">
+
+        <ul class="nav">
+            <li class="linked">
+                <a href="#" class="vertical-line">|</a>
+                <a href="#" class="link-text">Links</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="{{ url_for('journeyplan') }}">Journey Planner</a></li>
+            <li><a href="{{ url_for('ride') }}">Ride Experience</a></li>
+            <li><a href="{{ url_for('plans') }}">Plans and Pricing</a></li>
+            <li><a href="{{ url_for('explore') }}">Explore Dublin</a></li> 
+           
+        </ul>
+        <ul class="nav footer-logo">
+            <!-- <li><a id = 'logo1' class="footer-logo-1"></a></li>
+            <li><a id = 'logo2' class="footer-logo-2"></a></li> -->
+            <img src="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" alt="">
+        </ul>
+        <ul class="nav nav_1">
+            <li class="linked">
+                <a href="#" class="vertical-line">|</a>
+                <a href="#" class="link-text">Cancellation</a></li>
+            <li><a href="#">Cancellation Policy</a></li>
+            <li><a href="#">Terms of service</a></li>
+        </ul>
+       
+    </div>
+
+    <hr>
+    <div class="copyright">
+        <p class="info">@Group 12- All rights reserved</p></div>
+</footer>
