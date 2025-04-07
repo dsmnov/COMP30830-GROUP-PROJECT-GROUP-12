@@ -176,7 +176,6 @@ def get_weather_icon():
 #            icon_name = icon_data.text.strip()
 #            return icon_name
 
-    return '01d'
     query = 'https://prodapi.metweb.ie/observations/Dublin/today'
     response = requests.get(query)
 
