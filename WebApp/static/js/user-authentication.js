@@ -138,7 +138,18 @@ export async function createAccountModal() {
             const updatedHtml = await submitResponse.text();
             modal.innerHTML = updatedHtml;
 
-            attachLoginForm(modal, action);
+            const response = await fetch('/check_login', { 
+                method: 'POST',
+                credentials: 'same-origin' 
+            });
+
+            const status = await response.json();
+
+            if (status.loggedIn) {
+                location.reload();
+            } else {
+                attachLoginForm(modal, 'login')
+            }
         });
     }
 

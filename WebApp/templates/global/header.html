@@ -9,20 +9,39 @@
         <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
         <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
         <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
-        <a class="nav-link" id = 'log-in-button' data-login = 'login'>Log In</a>
 
-        <div class="join-button">
-          <a class="btn" id = 'register-button' data-register = 'register'>Join</a>
-        </div>
+        {% if current_user.is_authenticated %}
+          <!-- If the user is logged in -->
+          <!-- <a class='nav-link user-dropdown' id = 'user'>Welcome, {{ current_user.username }}!</a> -->
+
+
+
+          <div class="user-dropdown">
+            <!-- 'Welcome...' link -->
+            <a id="user">Welcome, {{ current_user.username }}!</a>
+            
+            <!-- Dropdown content (hidden by default) -->
+            <div class="dropdown-content">
+              <div id='fill-dropdown-space'></div>
+              <a href="{{ url_for('dashboard') }}" class="dropdown-link">Profile</a>
+              <a class="dropdown-link" id='log-out-button'>Log Out</a>
+            </div>
+          </div>
+
+
+
+        {% else %}
+          <!-- If the user is not logged in -->
+          <a class="nav-link" id="log-in-button" data-login="login">Log In</a>
+          <div class="join-button">
+            <a class="btn" id="register-button" data-register="register">Join</a>
+          </div>
+        {% endif %}
         
         <div class="language-selector">
           <img src="{{ url_for('static', filename='assets/globe_icon.svg') }}" alt="globe" />
           <p>EN</p>
         </div>
-        
-        <button id="menuToggle" class="menu-toggle">
-          <img src="{{ url_for('static', filename='assets/toggle-menu.svg') }}" alt="Menu" />
-        </button>
       </nav>
     </div>
 </header>

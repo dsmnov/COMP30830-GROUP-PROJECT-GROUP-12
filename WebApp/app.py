@@ -15,6 +15,7 @@ import datetime
 import time
 import os
 import pymysql
+from urllib.parse import urlparse, urljoin
 
 # Login Functionality imports along flask SQLite imports - SQLite is only used for the login system.
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -58,6 +59,11 @@ def ride():
 @app.route("/journeyplan")
 def journeyplan():
     return render_template("journeyplan.html")
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template("user-system/dashboard.html")
 
 @app.route('/api/stations', methods=['GET'])
 def get_stations():
@@ -225,9 +231,22 @@ def register():
         users_db.session.add(new_user)
         users_db.session.commit()
 
-        return render_template('user-system/registration_success.html', username=form.username.data)
+        return render_template('user-system/login_account.html', form=form)
 
     return render_template('user-system/register_account.html', form=form)
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'success': True}), 200
+
+@app.route('/check_login', methods=['GET', 'POST'])
+def check_login():
+    if current_user.is_authenticated:
+        return jsonify({'loggedIn': True}), 200
+    else:
+        return jsonify({'loggedIn': False}), 200
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
