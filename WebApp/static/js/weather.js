@@ -44,3 +44,15 @@ export async function getWeatherData(latitude, longitude) {
         console.error('Weather Data failed:', error);
     }
 }
+
+export async function getWeatherIcon() {
+    const iconResponse = await fetch('/api/weather/icon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const iconString = iconResponse.text()
+    return iconString
+}

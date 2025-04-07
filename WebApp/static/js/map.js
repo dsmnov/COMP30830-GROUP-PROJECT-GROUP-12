@@ -1,4 +1,5 @@
 import { Marker } from './markers.js';
+import { getWeatherIcon } from './weather.js';
 export let markers = [];
 
 async function initMap() {
@@ -38,7 +39,13 @@ async function initializeStationPanel() {
   
     document.addEventListener('click', (event) => {
         if (isWindowOpen && !locationWindow.contains(event.target)) {
-            locationWindow.style.display = 'none';
+            locationWindow.classList.add('closing');
+            
+            setTimeout(() => {
+                locationWindow.classList.remove('open');
+                locationWindow.classList.remove('closing');
+            }, 100);
+
             isWindowOpen = false;
         }
     });
@@ -49,21 +56,54 @@ async function initializeStationPanel() {
 async function main() {
     const map = await initMap();
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
     const stationData = await getStationData();
     let availabilityData = await getAvailabilityData();
+    let weatherIcon = await getWeatherIcon();
 
     const {locationWindow, windowContent, setIsWindowOpen} = await initializeStationPanel();
 
     stationData.forEach(station => {
-        const newMarker = new Marker(station.number, station.name, { lat: station.lat, lng: station.lng }, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData);
+        const newMarker = new Marker(
+            station.number, 
+            station.name, 
+            { lat: station.lat, lng: station.lng }, 
+            map, 
+            locationWindow, 
+            windowContent, 
+            setIsWindowOpen, 
+            AdvancedMarkerElement, 
+            availabilityData,
+            weatherIcon
+        );
         markers.push(newMarker);
     });
+
+    // Initial Trigger for WeatherData
+    /*
+    markers.forEach(async (marker, index) => {
+        setTimeout(() => {
+            marker.updateWeatherData(weatherIcon);
+        }, index * 100);
+    });
+    */
 
     setInterval(async () => {
         availabilityData = await getAvailabilityData();
         markers.forEach(marker => marker.updateMarkerData(availabilityData));
     }, 60000);
+
+    /*
+    // Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
+    setInterval(async () => {
+        weatherIcon = await getWeatherIcon();
+
+        markers.forEach((marker, index) => {
+            setTimeout(() => {
+                marker.updateWeatherData(weatherIcon);
+            }, index * 50);
+        });
+    }, 900000);
+    */
 }
 
 main()

@@ -3,12 +3,10 @@
 import { getRouteData } from './routes.js';
 import { markers } from './map.js';
 import { getWeatherData } from './weather.js';
-
-// TEST WEATHER DATA DISPLAYED WITHIN STATION PANEL, DONT FORGET TO REMOVE
-let weatherData = await getWeatherData();
+import { getWeatherIcon } from './weather.js';
 
 export class Marker {
-    constructor(id, name, position, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData) {
+    constructor(id, name, position, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData, weatherIcon) {
         this.id = id;
         this.name = name;
         this.position = position;
@@ -19,6 +17,8 @@ export class Marker {
         this.availableBikes = null;
         this.availableParking = null;
         this.marker = null;
+        this.weatherData = { temperature: null, humidity: null};
+        this.weatherIcon = weatherIcon;
         this.addMarker(AdvancedMarkerElement, availabilityData);
     }
 
@@ -136,32 +136,59 @@ export class Marker {
         const liveData = availabilityData.find(station => station.number == this.id)
         this.availableBikes = liveData.available_bikes;
         this.availableParking = liveData.available_bike_stands;
-        this._updateMarkerIcon()
-        console.log('Marker Data Updated')
+        this._updateMarkerIcon();
+        console.log('Marker Data Updated');
+    }
+
+    async updateWeatherData(weatherIcon) {
+        this.weatherData = await getWeatherData(this.position.lat, this.position.lng);
+        this.weatherIcon = weatherIcon;
     }
 
     _addStationPanel() {
         const originMarker = this;
         this.marker.addEventListener('click', (e) => {
+            console.log('WEATHER ICON TEST:', this.weatherIcon);
+            const iconEndPoint = `https://www.met.ie/cms/assets/uploads/2018/01/${this.weatherIcon}.png`
             windowContent.innerHTML = `
-                <h3>Test Weather Data</h3>
-                <p>Temperature: ${weatherData.temperature} Celsius</p>
-                <p>Humidity: ${weatherData.humidity}%</p>
-                <h2>${this.name}</h2>
-                <p>Available Bikes: ${this.availableBikes}</p>
-                <p>Available Bike Stands: ${this.availableParking}</p>    
-                <h3>Plan a Journey</h3>
-                    <label class = 'stationSearch'>
-                        <input type = 'text' required id = 'stationInput' autocomplete = 'off' />
-                        <span class = 'placeholder'>Select Destination</span>
-                        <span id = 'errorMessage1'></span>
-                        <span id = 'errorMessage2'></span>
-                        <ul class = 'dropdown' id = 'stationDropdown'>
-                    </label>
-                `;
+                <div class='stationPanelContent'>
+                    <div id='stationPanelTitle'>
+                        <h2>${this.name}</h2>
+                    </div>
+
+                    <div id='stationPanelWeather'>
+                        <span id='weatherTitle'>
+                            <img src=${iconEndPoint} width="50" height="50">
+                            <h3>Weather Data</h3>
+                        </span>
+
+                        <div id='weatherData'>
+                            <p>Temperature: ${this.weatherData.temperature || 'loading...'} Celsius</p>
+                            <p>Humidity: ${this.weatherData.humidity || 'loading...'}%</p>
+                        </div>
+                    </div>
+
+                    <div id='stationPanelData'>
+                        <h2>${this.name}</h2>
+                        <p>Available Bikes: ${this.availableBikes}</p>
+                        <p>Available Bike Stands: ${this.availableParking}</p>
+                    </div>
+
+                    <div id='stationPanelRouter'>
+                        <h3>Plan a Journey</h3>
+                            <label class = 'stationSearch'>
+                                <input type = 'text' required id = 'stationInput' autocomplete = 'off' />
+                                <span class = 'placeholder'>Select Destination</span>
+                                <span id = 'errorMessage1'></span>
+                                <span id = 'errorMessage2'></span>
+                                <ul class = 'dropdown' id = 'stationDropdown'>
+                            </label>
+                    </div>
+                </div>
+            `;
                 
-        
-            this.locationWindow.style.display = 'block';
+            this.locationWindow.classList.remove('closing');
+            this.locationWindow.classList.add('open');
             this.setIsWindowOpen(true);
             e.stopPropagation();
         

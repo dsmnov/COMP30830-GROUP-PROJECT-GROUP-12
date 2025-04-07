@@ -16,6 +16,7 @@ import time
 import os
 import pymysql
 from urllib.parse import urlparse, urljoin
+import xml.etree.ElementTree as ET
 
 # Login Functionality imports along flask SQLite imports - SQLite is only used for the login system.
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -70,7 +71,7 @@ def get_stations():
     engine = create_engine(connection_string, echo = True)
 
     with engine.connect() as connection:
-        result = connection.execute(sqla.text("SELECT number, name, lat, lng FROM station"))
+        result = connection.execute(sqla.text("SELECT number, name, lat, lng FROM station ORDER BY station.number;"))
         stations = [dict(row) for row in result.mappings()]
 
     return jsonify(stations)
@@ -80,7 +81,27 @@ def get_availability():
     engine = create_engine(connection_string, echo = True)
 
     with engine.connect() as connection:
-        result = connection.execute(sqla.text("SELECT a.number, s.bikestands, a.available_bike_stands, a.available_bikes, a.last_update FROM station s, availability a JOIN (SELECT number, MAX(last_update) AS max_last_update FROM availability GROUP BY number) AS latest ON a.number = latest.number AND a.last_update = latest.max_last_update ORDER BY a.number;"))
+        query = sqla.text("""
+            SELECT
+                s.number,
+                s.bikestands,
+                a.available_bike_stands,
+                a.available_bikes,
+                a.last_update
+            FROM station s
+            JOIN (
+                SELECT 
+                    number, 
+                    MAX(last_update) AS max_last_update
+                FROM availability
+                GROUP BY number
+            ) AS latest ON s.number = latest.number
+            JOIN availability a 
+                ON s.number = a.number
+                AND a.last_update = latest.max_last_update
+            ORDER BY s.number;
+        """)
+        result = connection.execute(query)
         availability = [dict(row) for row in result.mappings()]
 
     return jsonify(availability)
@@ -141,6 +162,29 @@ def get_weather():
     
     response = requests.get(query)
     return response.text
+
+@app.route('/api/weather/icon', methods=['POST'])
+def get_weather_icon():
+# Older implementation I used however I found a better one on the website to use down below
+#    query = 'https://www.met.ie/Open_Data/xml/obs_present.xml'
+#    response = requests.get(query)
+#
+#    root = ET.fromstring(response.text)
+#    for station in root.findall('station'):
+#        if station.attrib.get('name', '').lower() == 'dublin':
+#            icon_data = root.find('symbol')
+#            icon_name = icon_data.text.strip()
+#            return icon_name
+
+    return '01d'
+    query = 'https://prodapi.metweb.ie/observations/Dublin/today'
+    response = requests.get(query)
+
+    data = response.json()
+    current_report = data[-1]
+    icon = current_report.get('symbol')
+
+    return str(icon)
 
 # Logic taken from https://www.youtube.com/watch?v=71EU8gnZqZQ&t=4s and https://flask-login.readthedocs.io/en/latest/
 
