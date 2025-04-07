@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dublinbikes Bike Availability Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        input, button { padding: 10px; margin: 5px; }
+        .result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Dublinbikes Bike Availability Predictor</h2>
+    
+    <label for="stationId">Station ID:</label><br>
+    <input type="number" id="stationId" placeholder="Enter Station ID" value="10"><br>
+
+    <label for="datetime">Date and Time:</label><br>
+    <input type="datetime-local" id="datetime"><br>
+
+    <button onclick="predictAvailability()">Predict Availability</button>
+
+    <div class="result" id="predictionResult"></div>
+
+    <script>
+        async function predictAvailability() {
+            const stationId = document.getElementById("stationId").value;
+            const datetimeLocal = document.getElementById("datetime").value;
+
+            // Format datetime-local for API
+            const datetimeFormatted = datetimeLocal.replace("T", " ") + ":00";
+
+            const response = await fetch("/api/predict_availability", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    station_id: stationId, 
+                    datetime: datetimeFormatted 
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById("predictionResult").innerHTML = 
+                    "Error: " + data.error;
+            } else {
+                document.getElementById("predictionResult").innerHTML = 
+                    "Predicted available bikes at Station " + data.station_id + 
+                    " on " + data.datetime + ": <strong>" + 
+                    data.predicted_bikes_available + "</strong>";
+            }
+        }
+    </script>
+</body>
+</html>
