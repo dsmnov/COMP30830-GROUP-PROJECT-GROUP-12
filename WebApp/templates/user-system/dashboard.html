@@ -1,1 +1,150 @@
-<h1>TEST</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="icon" href="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" type="image/svg+xml">
+
+    <!-- Global CSS and Global Script Imports -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/footer.css') }}">
+    <script defer type="module" src="{{ url_for('static', filename='js/user-system.js') }}"></script>
+
+    <!-- Content Specific CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <!-- Header -->
+  {% include 'global/header.html' %}
+  
+    <section class="profile-dashboard-sidebar text-transform">
+      <div class="sidebar-title-wrapper flex">
+        
+         <a href="#" class="sidebar-icon">
+          <img src="{{ url_for('static', filename='assets/dashboard-icon.png') }}" alt="Dashboard icon">
+         </a>
+        <h3 class="sidebar-title">Dashboard</h3>
+      </div>
+      <div class="sidebar-nav flex">
+        <div class="sidebar-content flex">
+         
+           <a href="#" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='assets/profile-icon.png') }}" alt="Dashboard icon">
+           </a>
+            <p class="sidebar-item">Profile Summary</p>
+        </div>
+        <div class="sidebar-content flex">
+          
+           <a href="#" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='assets/account-icon.png') }}" alt="Dashboard icon">
+           </a>
+            <p class="sidebar-item">Account details</p>
+        </div>
+        <div class="sidebar-content flex">
+        
+           <a href="#" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='assets/activity-icon.png') }}" alt="Dashboard icon">
+           </a>
+            <p class="sidebar-item">recent activity</p>
+        </div>
+        <div class="sidebar-content flex">
+        
+           <a href="#" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='assets/favorite-icon.png') }}" alt="Dashboard icon">
+           </a>
+            <p class="sidebar-item">favorite stations</p>
+        </div>
+        <div class="sidebar-content flex">
+         
+           <a href="#" class="sidebar-icon">
+            <img src="{{ url_for('static', filename='assets/log-out-icon.png') }}" alt="Dashboard icon">
+           </a>
+            <p class="sidebar-item">Log Out</p>
+        </div>
+      </div>
+    </section>
+    <!-- Main Section -->
+  <main>
+    <div class="profile-card welcome">
+      <div class="profile-title-wrapper">
+        <h4 class="card-title text-transform">Profile summary</h4>
+      <hr>
+      </div>
+      
+      <div class="welcome-card-content text-transform">
+        <h1 class="welcome-text">welcome</h1>
+        <p id="user">{{ current_user.username }}!</p>
+      </div>
+    </div>
+    <div class="profile-card account-details">
+      <div class="profile-title-wrapper">
+        <h4 class="card-title text-transform">account details</h4>
+      <hr>
+      </div>
+      <div class="account-details-summary">
+        <div class="account-details-card text-transform">
+          <h5 class="details-card-title">Active Plan</h5>
+          <p class="details-placeholder">--</p>
+          <!-- -add code here instead of placeholder -->
+        </div>
+        <div class="account-details-card text-transform">
+          <h5 class="details-card-title">Expires On</h5>
+          <p class="details-placeholder">--</p>
+          <!-- -add code here instead of placeholder -->
+        </div>
+        <div class="account-details-card text-transform">
+          <h5 class="details-card-title ">additional options</h5>
+          <p class="details-placeholder">--</p>
+          <!-- add code here instead of placeholder -->
+        </div>
+      </div>
+    
+    </div>
+    <div class="profile-card recent-activity">
+      <div class="profile-title-wrapper">
+        <h4 class="card-title text-transform">recent activity</h4>
+      <hr>
+      </div>
+      <div class="activity-summary">
+        <div class="activity-summary-card text-transform">
+          <h5 class="activity-card-title">Total no. of rides</h5>
+          <p class="details-placeholder">--</p>
+            <!-- add code here instead of placeholder -->
+        </div>
+        <div class="activity-summary-card text-transform">
+          <h5 class="activity-card-title">Recent journey</h5>
+          <p class="details-placeholder">--</p>
+            <!-- add code here instead of placeholder -->
+        </div>
+        <div class="activity-summary-card text-transform">
+          <h5 class="activity-card-title">Ride Statistics</h5>
+          <p class="details-placeholder">--</p>
+            <!-- add code here instead of placeholder -->
+        </div>
+      </div>
+    </div>
+    <div class="profile-card favorite-stations">
+      <div class="profile-title-wrapper">
+        <h4 class="card-title text-transform">favorite stations</h4>
+      <hr>
+      </div>
+      <div class="favorite-stations-summary text-transform">
+        <!-- placeholder -->
+        <div class="favorite-stations-card">
+          <p class="details-placeholder">You have no favorite stations yet!</p>
+          <a href="#" class="btn">Get started</a>
+            <!-- add code here instead of placeholder -->
+        </div>
+    
+      </div>
+     
+    </div>
+  </main>
+
+<!-- Footer -->
+{% include 'global/footer.html' %}
+
+</body>
+</html>

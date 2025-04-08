@@ -1,0 +1,212 @@
+/* https://www.youtube.com/watch?v=NnniXasJIpY */
+body{
+    height:100dvh;
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 
+    'header header'
+    'sidebar main'
+    'footer footer';
+
+}
+.flex{
+    display: flex;
+}
+.text-transform{
+    text-transform: uppercase;
+}
+header{
+  grid-area: header;
+}
+/* sidebar styling */
+.profile-dashboard-sidebar{
+    background-color: #e7f6ff;
+    grid-area: sidebar;
+    padding-left: 2rem;
+}
+.sidebar-title-wrapper{
+    align-items: center;
+    gap:1rem;
+    padding-top: 0.5rem;
+
+}
+.sidebar-icon{
+    width:15px;
+}
+.sidebar-nav{
+    flex-direction: column;
+    padding-top: 2rem;
+    gap:2rem;
+}
+.sidebar-content{
+    font-weight: 500;
+    font-size: 15px;
+    align-items: center;
+    gap:0.5rem;
+}
+/* main styling */
+main{
+    background-color:#fff;
+    padding:1.25rem;
+    grid-area: main;
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 300px 400px 200px;
+    grid-template-areas: 
+    'c1 c2'
+    'c3 c3'
+    'c4 c4';
+    gap:20px;
+    padding:25px;
+}
+.profile-card{
+    background-color: #e7f6ff;
+    /* background-color: #0c0b31; */
+    border-radius: 10px;
+    display: grid;
+    grid-template-rows: 50px 1fr;
+}
+.welcome{
+    grid-area: c1;
+}
+.account-details{
+    grid-area:c2;
+}
+.recent-activity{
+    grid-area: c3;
+}
+.favorite-stations{
+    grid-area: c4;
+}
+footer{
+   grid-area: footer;
+}
+
+
+/* Card general styling */
+.card-title{
+    color:#0c0b31;
+    padding:1rem;
+}
+hr{
+    width: 100%;
+    background-color: rgb(212, 208, 208);
+    border:none;
+    height:0.2px;
+}
+
+/* Welcome card styling */
+
+.welcome-card-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.welcome-text{
+    font-size: 40px;
+}
+.welcome-card-content #user{
+    all:unset;
+    text-transform: uppercase;
+}
+
+/* Account Details */
+.account-details-summary{
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem;
+    justify-content: center;
+    padding-inline: 2rem;
+}
+.account-details-card{
+    background-color: #fff;
+    border-radius: 10px;
+    width:100%;
+    height:60px;
+    color:#0c0b31;
+    padding-left: 0.5rem;
+    padding-top: 1rem;
+
+}
+/* Recent Activity */
+.activity-summary{
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 90px 90px;
+    gap:2rem;
+    grid-template-areas: 
+    'c1 c2'
+    'c3 c3';
+}
+.activity-summary-card{
+    background-color: #fff;
+    border-radius: 10px;
+    width:100%;
+    height:100px;
+    padding-left: 0.5rem;
+    padding-top: 1rem;
+}
+/* Favorite Stations */
+.favorite-stations-summary{
+    padding: 2rem;
+}
+.favorite-stations-card{
+    background-color: #fff;
+    height:90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:0.5rem;
+}
+.favorite-stations-card .btn{
+    font-size: 12px;
+    padding:0.5rem;
+}
+/* Media queries */
+@media (max-width:1025px){
+    body{
+        grid-template-columns: 200px 1fr;
+    }
+    main{
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 200px 300px 400px 200px;
+        grid-template-areas:initial;
+    }
+    .profile-card{
+        grid-area: initial !important;
+    }
+   
+}
+@media (max-width:767px){
+    body{
+        grid-template-columns: 50px 1fr;
+    }
+    main{
+        grid-template-columns: 300px;
+        grid-template-rows: 200px 300px 400px 200px;
+        grid-template-areas:initial;
+    }
+    .profile-card{
+        grid-area: initial !important;
+    }
+    .profile-dashboard-sidebar{
+        background-color: #e7f6ff;
+        grid-area: sidebar;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .sidebar-title{
+        display: none;
+    }
+   .sidebar-item{
+    display: none;
+   }
+   
+}
