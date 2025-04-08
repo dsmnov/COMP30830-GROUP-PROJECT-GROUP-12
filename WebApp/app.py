@@ -265,6 +265,7 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
+                return render_template('user-system/login_account.html', form=form)
 
     return render_template('user-system/login_account.html', form=form)
 
