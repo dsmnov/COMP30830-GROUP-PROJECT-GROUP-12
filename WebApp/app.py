@@ -171,7 +171,6 @@ def get_weather():
 
 @app.route('/api/weather/icon', methods=['POST'])
 def get_weather_icon():
-    return '01d'
 # Older implementation I used however I found a better one on the website to use down below
 #    query = 'https://www.met.ie/Open_Data/xml/obs_present.xml'
 #    response = requests.get(query)
