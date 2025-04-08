@@ -31,7 +31,7 @@ body {
 	width: 350px;
 	border-radius: 40px;
 	height: calc((100vh - 92px)/1.25);
-	background-color: white;
+	background-color: #f3f7ff;
 	box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 	overflow-y: auto;
 	display: none;
@@ -65,9 +65,131 @@ body {
     }
 }
 
+/* Station Panel Content Styling */
+
+#stationPanelTitle {
+	text-align: center;
+	background-color: #334;
+ 	color: white;
+	padding: 30px 0;
+	border-bottom-left-radius: 40px;
+	border-bottom-right-radius: 40px;
+}
+
+#stationPanelWeather {
+	background-color: white;
+	margin: 5px;
+	margin-top: 10px;
+	padding: 5px 10px 10px 10px;
+	border-radius: 25px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#weatherTitle {
+	background-color: white;
+    display: flex;
+    align-items: center;
+	justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+    padding: 8px;
+	padding-left: 50px;
+	width: 100%;
+	height: 55px;
+	margin-bottom: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#weatherTitle img {
+	margin-left: 10px;
+    margin-right: 10px;
+}
+
+#weatherTitle h3 {
+    margin: 0;
+}
+
+#weatherData {
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-rows: repeat(2, auto);
+	gap: 0px;
+	padding-bottom: 2px;
+}
+
+#weatherData p {
+	font-size: 12px;
+}
+
+#weatherData p b{
+	font-size: 14px;
+}
+
+#stationPanelAvailability {
+	background-color: white;
+	margin: 5px;
+	padding: 5px 10px 10px 10px;
+	border-radius: 30px;
+	margin-top: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#stationPanelAvailability h3 {
+	background-color: white;
+	display: flex;
+    align-items: center;
+	justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+    padding: 8px;
+	width: 100%;
+	height: 55px;
+	margin-bottom: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#stationPanelAvailabilityData p {
+	display: flex;
+	align-items: center;
+	padding-top: 5px;
+	font-size: 12px;
+}
+
+#stationPanelAvailabilityData img {
+	margin-left: 5px;
+}
+
+#stationPanelAvailabilityData b {
+	font-size: 14px;
+}
+
+#stationPanelRouter {
+	background-color: white;
+	margin: 5px;
+	padding: 5px 10px 10px 10px;
+	border-radius: 30px;
+	margin-top: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#stationPanelRouter h3 {
+	background-color: white;
+	display: flex;
+    align-items: center;
+	justify-content: center;
+    border: 1px solid #ccc;
+    border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
+    padding: 8px;
+	width: 100%;
+	height: 45px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Complex styling from: https://www.youtube.com/watch?v=3AK3vspZvvM&ab_channel=BeforeSemicolon */
 .stationSearch {
 	position: relative;
+	margin-left: -5px;
 	font-size: 14px;
 	padding-top: 20px;
 	margin-bottom: 5px;
@@ -78,16 +200,15 @@ body {
 	border: none;
 	appearance: none;
 	padding: 12px 5px 12px 5px;
-	width: 250px;
+	width: 100%;
 	outline: none;
-	border-radius: 0;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
+
 	background:
 		linear-gradient(90deg, #222, #222) center bottom / 0% 2px no-repeat,
 		linear-gradient(90deg, #ccc, #ccc) left bottom / 100% 2px no-repeat,
 		linear-gradient(90deg, #fafafa, #fafafa) left bottom / 100% no-repeat;
 	transition: background-size 0.3s ease;
+	margin-bottom: 0px;
 }
 
 .stationSearch input:focus {
@@ -97,8 +218,8 @@ body {
 
 .stationSearch .placeholder {
 	position: absolute;
-	left: 5px;
-	top: calc(50% + 10px);
+	left: 15px;
+	top: 28px;
 	transform: translateY(-50%);
 	color: #aaa;
 	pointer-events: none;
@@ -106,6 +227,7 @@ body {
 		top 0.2s ease,
 		font-size 0.2s ease,
 		color 0.2s ease;
+		white-space: nowrap;
 }
 
 .stationSearch input:focus + .placeholder,
@@ -116,25 +238,26 @@ body {
 }
 
 .stationSearch .dropdown {
-	position: absolute;
-	top: 48px;
-	left: 0;
-	width: 260px;
+	position: relative;
+	top: -20px;
 	background: #fff;
 	border-top: none;
-	max-height: calc(5 * 40px);
+	height: 148px;
 	overflow-y: auto;
 	list-style: none;
 	padding: 0;
 	margin: 0;
 	z-index: 10;
 	display: none;
+	margin-bottom: -18px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
 }
   
 .stationSearch .dropdown li {
 	padding: 10px 12px;
 	cursor: pointer;
-	height: 18px;
+	height: auto;
 }
   
 .stationSearch .dropdown li:hover {
@@ -157,36 +280,76 @@ body {
 	color: red;
 }
 
-/* Station Panel Content Styling */
-#stationPanelTitle {
-	text-align: center;
-	background-color: #334;
- 	color: white;
-	padding: 30px 0;
-	border-bottom-left-radius: 40px;
-	border-bottom-right-radius: 40px;
-}
-
-#stationPanelWeather {
+#predictionContent {
+	background-color: white;
 	margin: 5px;
-	padding: 5px;
-	border: 1px solid;
-	border-radius: 5px;
+	margin-top: 10px;
+	padding: 5px 10px 10px 10px;
+	border-radius: 25px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-#weatherTitle {
-    display: inline-flex;
+#predictionContent h3{
+	background-color: white;
+    display: flex;
     align-items: center;
+	justify-content: center;
     border: 1px solid #ccc;
     border-radius: 40px;
     padding: 8px;
 	width: 100%;
+	height: 55px;
+	margin-bottom: 5px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#weatherTitle img {
-    margin-right: 10px;
+#predictionContent label, input, button {
+	display: inline-flex;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	font-size: 14px;
 }
 
-#weatherTitle h3 {
-    margin: 0;
+#predictionContent button {
+	text-align: center;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+#predictionContent #result {
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-rows: repeat(2, auto);
+	gap: 0px;
+	padding-bottom: 2px;
+	font-size: 14px;
+}
+
+#predictionContent #station_id_visible {
+	pointer-events: none;
+}
+
+#predictionContent #station_id_visible:active {
+	pointer-events: none;
+}
+
+#infoWindowIcon1 {
+	display: flex;
+	align-items: center;
+	padding-top: 5px;
+}
+
+#infoWindowIcon1 img {
+	margin-left: 8px;
+}
+
+#infoWindowIcon2 {
+	display: flex;
+	align-items: center;
+	padding-top: 5px;
+}
+
+#infoWindowIcon2 img {
+	margin-left: 8px;
 }

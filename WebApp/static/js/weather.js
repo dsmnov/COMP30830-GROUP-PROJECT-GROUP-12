@@ -30,14 +30,18 @@ export async function getWeatherData(latitude, longitude) {
         const weatherDataBody = weatherData.querySelector('weatherdata product time location');
         const temperatureDOM = weatherDataBody.querySelector('temperature');
         const humidityDOM = weatherDataBody.querySelector('humidity');
+        const windDirectionDOM = weatherDataBody.querySelector('windDirection')
+        const windSpeedDOM = weatherDataBody.querySelector('windSpeed')
 
         const temperature = temperatureDOM.getAttribute('value');
         const humidity = humidityDOM.getAttribute('value');
+        const windDirection = windDirectionDOM.getAttribute('name');
+        const windSpeed = windSpeedDOM.getAttribute('name');
 
         console.log(temperature);
         console.log(humidity);
 
-        const weatherReport = { temperature, humidity }
+        const weatherReport = { temperature, humidity, windDirection, windSpeed }
 
         return weatherReport
     } catch (error) {

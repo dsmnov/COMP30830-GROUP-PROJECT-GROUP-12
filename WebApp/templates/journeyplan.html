@@ -19,6 +19,13 @@
     <!-- Local Script Imports -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFdzfzeBk3A8ASwoklDgw2HG4n6ewF4Iw&v=beta&libraries=geometry"></script>
     <script defer type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+    <!-- Doing this solves a jinja template and dynamic insertion issue -->
+    <script>
+      // Using Jinja to generate the URL for the bike icon:
+      const bikeIcon = "{{ url_for('static', filename='assets/bike_icon.svg') }}";
+      const parkingIcon = "{{ url_for('static', filename='assets/parking_icon.png') }}";
+    </script>
   </head>
 
   <body>
@@ -31,6 +38,9 @@
 
     <div id = 'locationWindow'>
       <div id = 'windowContent'></div>
+      <div id='predictionContent'>
+        {% include 'machine-learning/prediction.html' %}
+      </div>
     </div>
     
     <!-- Footer -->

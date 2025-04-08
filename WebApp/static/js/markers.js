@@ -44,13 +44,13 @@ export class Marker {
 
             this.marker.content.style.transition = "transform 0.1s ease";
             this.marker.content.style.transform = "scale(1.15)";
-            
+
             const infoWindowContentString = `
                 <div id='content'>
                     <h1>${this.name}</h1>
                         <ul>
-                            <li>Available Bikes:${this.availableBikes}</li>
-                            <li>Parking Stations:${this.availableParking}</li>
+                            <li id='infoWindowIcon1'>Available Bikes: ${this.availableBikes}<img src=${bikeIcon} height='20' width='20'></li>
+                            <li id='infoWindowIcon2'>Parking Stations: ${this.availableParking}<img src=${parkingIcon} height='20' width='20'></li>
                         </ul>
                 </div>`;
 
@@ -158,20 +158,24 @@ export class Marker {
 
                     <div id='stationPanelWeather'>
                         <span id='weatherTitle'>
+                            <h3>Current Weather</h3>
                             <img src=${iconEndPoint} width="50" height="50">
-                            <h3>Weather Data</h3>
                         </span>
 
                         <div id='weatherData'>
-                            <p>Temperature: ${this.weatherData.temperature || 'loading...'} Celsius</p>
-                            <p>Humidity: ${this.weatherData.humidity || 'loading...'}%</p>
+                            <p><b>Temperature:</b> ${this.weatherData.temperature || 'loading...'}°C</p>
+                            <p><b>Humidity:</b> ${this.weatherData.humidity || 'loading...'}%</p>
+                            <p><b>Wind Direction:</b> ${this.weatherData.windDirection || 'loading...'}</p>
+                            <p><b>Wind Speed:</b> ${this.weatherData.windSpeed || 'loading...'}</p>
                         </div>
                     </div>
 
-                    <div id='stationPanelData'>
-                        <h2>${this.name}</h2>
-                        <p>Available Bikes: ${this.availableBikes}</p>
-                        <p>Available Bike Stands: ${this.availableParking}</p>
+                    <div id='stationPanelAvailability'>
+                        <h3>Current Availability</h3>
+                        <div id='stationPanelAvailabilityData'>
+                            <p><b>Available Bikes:</b> ${this.availableBikes} <img src=${bikeIcon} height='20' width='20'></p>
+                            <p><b>Available Parking:</b> ${this.availableParking} <img src=${parkingIcon} height='20' width='20'></p>
+                        </div>
                     </div>
 
                     <div id='stationPanelRouter'>
@@ -181,7 +185,7 @@ export class Marker {
                                 <span class = 'placeholder'>Select Destination</span>
                                 <span id = 'errorMessage1'></span>
                                 <span id = 'errorMessage2'></span>
-                                <ul class = 'dropdown' id = 'stationDropdown'>
+                                <ul class = 'dropdown' id = 'stationDropdown'></ul>
                             </label>
                     </div>
                 </div>
@@ -222,6 +226,8 @@ export class Marker {
                         e.stopPropagation();
 
                         input.value = station.name;
+                        document.getElementById("station_id_visible").value = station.name;
+                        sendDestinationForPrediction(station.name);
                         dropdown.style.display = 'none';
 
                         const destinationCoordinates = {
@@ -234,11 +240,11 @@ export class Marker {
                         const destinationData = markers.find(m => m.id == parseInt(li.dataset.number));
 
                         if (destinationData.availableParking < 3) {
-                            document.getElementById('errorMessage1').textContent = 'Warning: Destination has Low Parking Availability!';
+                            document.getElementById('errorMessage1').textContent = 'Warning: Destination has Low Current Parking Availability!';
                         }
 
                         if (originMarker.availableBikes < 3) {
-                            document.getElementById('errorMessage2').textContent = 'Warning: Origin has Low Bike Availability!';
+                            document.getElementById('errorMessage2').textContent = 'Warning: Origin has Low Current Bike Availability!';
                         }
                     });
 
@@ -263,4 +269,14 @@ export class Marker {
             });
         });
     }
+}
+
+function sendDestinationForPrediction(stationName) {
+    fetch('/api/availability/prediction/stationid', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: stationName
+    });
+
+
 }

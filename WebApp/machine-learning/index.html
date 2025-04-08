@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Availability Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        label, input, button {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚲 Bike Availability Prediction</h1>
+
+    <label for="station_id">Station ID:</label>
+    <input type="number" id="station_id" required>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" required>
+
+    <label for="time">Time:</label>
+    <input type="time" id="time" required>
+
+    <button onclick="predict()">Predict</button>
+
+    <div id="result"></div>
+
+    <script>
+        function predict() {
+            const stationId = document.getElementById("station_id").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+            const resultDiv = document.getElementById("result");
+
+            if (!stationId || !date || !time) {
+                resultDiv.innerHTML = "Please fill out all fields.";
+                return;
+            }
+
+            const formattedTime = time + ":00";
+
+            fetch(`/api/availability/prediction?station_id=${stationId}&date=${date}&time=${formattedTime}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.predicted_available_bikes !== undefined) {
+                        resultDiv.innerHTML = `
+                            Predicted Available Bikes: ${data.predicted_available_bikes} <br>
+                            Predicted Available Bike Stands: ${data.predicted_available_bike_stands} <br><br>
+                            <strong>Weather at selected time:</strong><br>
+                            Temperature: ${data.weather.temperature} °C <br>
+                            Humidity: ${data.weather.humidity}% <br>
+                            Pressure: ${data.weather.pressure} hPa
+                        `;
+                    } else {
+                        resultDiv.innerHTML = "Prediction failed: " + (data.error || "Unknown error");
+                    }
+                })
+                .catch(err => {
+                    resultDiv.innerHTML = "Error: " + err.message;
+                });
+        }
+    </script>
+
+</body>
+</html>

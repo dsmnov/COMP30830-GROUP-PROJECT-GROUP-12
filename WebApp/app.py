@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, jsonify, request, redirect
+from flask import Flask, render_template, url_for, jsonify, request, redirect, send_from_directory
 from flask_cors import CORS
 import sqlalchemy as sqla
 from sqlalchemy import create_engine, text
@@ -11,7 +11,7 @@ import requests
 import time
 from IPython.display import display
 import traceback
-import datetime
+from datetime import datetime
 import time
 import os
 import pymysql
@@ -25,6 +25,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError, Regexp
 from flask_bcrypt import Bcrypt
+
+# Machine learning Imports
+import numpy as np
+import pandas as pd
+import pickle
+
 
 # Database access and connection_string for Station and Availability
 USER = "denissemenov"
@@ -165,6 +171,7 @@ def get_weather():
 
 @app.route('/api/weather/icon', methods=['POST'])
 def get_weather_icon():
+    return '01d'
 # Older implementation I used however I found a better one on the website to use down below
 #    query = 'https://www.met.ie/Open_Data/xml/obs_present.xml'
 #    response = requests.get(query)
@@ -288,6 +295,103 @@ def check_login():
         return jsonify({'loggedIn': True}), 200
     else:
         return jsonify({'loggedIn': False}), 200
+
+# Machine Learning Data Endpoint
+def construct_stations_datafile():
+    engine = create_engine(connection_string, echo=True)
+    with engine.connect() as connection:
+        query = text("SELECT number AS station_id, lat, lng FROM station ORDER BY station.number;")
+        result = connection.execute(query).mappings().all()
+
+        stations_df = pd.DataFrame(result, columns=['station_id', 'lat', 'lng'])
+        return stations_df
+
+OPENWEATHER_API_KEY = "8d3db8ac62d93b208d6cf30ea6ef204c"
+
+def get_weather_forecast(lat, lng):
+    url = (
+        f"https://api.openweathermap.org/data/2.5/forecast?"
+        f"lat={lat}&lon={lng}&appid={OPENWEATHER_API_KEY}&units=metric"
+    )
+    response = requests.get(url)
+    if response.status_code != 200:
+        raise Exception("Failed to fetch weather data")
+    data = response.json()
+    forecast = data['list'][0]  # Forecast for next 3-hour slot
+
+    return {
+        "temperature": forecast['main']['temp'],
+        "humidity": forecast['main']['humidity'],
+        "pressure": forecast['main']['pressure']
+    }
+
+with open("WebApp/machine-learning/bike_availability_model.pkl", "rb") as f:
+    model = pickle.load(f)
+
+stations_df = construct_stations_datafile()
+
+@app.route('/api/availability/prediction', methods=['GET'])
+def get_availability_prediction():
+    date = request.args.get("date")
+    time = request.args.get("time")
+    station_id = request.args.get("station_id")
+
+    if not date or not time or not station_id:
+        return jsonify({"error": "Missing date, time, or station_id"}), 400
+
+    dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M:%S")
+    hour = dt.hour
+    day = dt.day
+
+    # Get station coordinates
+    station = stations_df[stations_df['station_id'] == int(station_id)]
+    if station.empty:
+        return jsonify({"error": "Invalid station ID"}), 400
+
+    lat = station.iloc[0]['lat']
+    lng = station.iloc[0]['lng']
+
+    # Fetch weather from OpenWeather API
+    weather = get_weather_forecast(lat, lng)
+
+    input_features = np.array([[
+        int(station_id),
+        hour,
+        day,
+        weather["temperature"],
+        weather["humidity"],
+        weather["pressure"]
+    ]])
+
+    prediction = model.predict(input_features)[0]
+
+    return jsonify({
+        "predicted_available_bikes": int(prediction[0]),
+        "predicted_available_bike_stands": int(prediction[1]),
+        "weather": weather
+    })
+
+# Linking API function for Prediction Automation
+stored_stationid = None
+@app.route('/api/availability/prediction/stationid', methods=['POST'])
+def send_prediction_stationid():
+    global stored_stationid
+    station_name = request.get_data(as_text=True).strip()
+
+    engine = create_engine(connection_string, echo=True)
+    with engine.connect() as connection:
+        query = text('SELECT number AS station_id FROM station WHERE name = :station_name')
+        result = connection.execute(query, {"station_name": station_name}).mappings().first()
+        station_id = result['station_id'] if result else None
+
+    stored_stationid = { 'station_id' : station_id }
+    return '', 204
+
+@app.route('/api/availability/prediction/stationid/get', methods=['POST'])
+def get_prediction_stationid():
+    print(stored_stationid)
+    return stored_stationid
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
