@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Bike Availability Prediction</title>
+</head>
+<body>
+    <h1>🚲 Live Prediction for Station 42</h1>
+    <p>This updates every 90 seconds using real-time availability + weather data.</p>
+    <h2 id="result">Fetching prediction...</h2>
+
+    <script>
+        const stationId = 42;  // You can change this to any valid station number
+
+        async function fetchLatestDataAndPredict() {
+            try {
+                // Fetch availability (station data)
+                const stationResp = await fetch("/api/availability");
+                const stationData = await stationResp.json();
+                const station = stationData.find(s => s.number == stationId);
+
+                if (!station) {
+                    document.getElementById("result").innerText = "Station not found.";
+                    return;
+                }
+
+                // Build datetime for weather fetch
+                const now = new Date();
+                const isoTime = now.toISOString().split('.')[0] + "Z"; // e.g. 2025-04-06T13:00:00Z
+
+                // Fetch weather
+                const weatherResp = await fetch("/api/weather", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ lat: station.lat, lng: station.lng, time: isoTime })
+                });
+                const weatherXml = await weatherResp.text();
+
+                // Extract weather values from XML using regex
+                const maxTemp = parseFloat(weatherXml.match(/temperature value="([\d.]+)"/)?.[1] || 12);
+                const humidity = parseFloat(weatherXml.match(/humidity value="([\d.]+)"/)?.[1] || 70);
+                const pressure = parseFloat(weatherXml.match(/pressure value="([\d.]+)"/)?.[1] || 1012);
+
+                // Prepare data for prediction
+                const payload = {
+                    station_id: stationId,
+                    hour: now.getHours(),
+                    day: now.getDate(),
+                    month: now.getMonth() + 1,
+                    year: now.getFullYear(),
+                    max_temp: maxTemp,
+                    min_temp: maxTemp - 5,
+                    max_humidity: humidity,
+                    min_humidity: humidity - 10,
+                    max_pressure: pressure,
+                    min_pressure: pressure - 2
+                };
+
+                // Predict
+                const predictionResp = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await predictionResp.json();
+
+                document.getElementById("result").innerText = "Predicted Bikes Available: " + result.predicted_bikes;
+            } catch (error) {
+                document.getElementById("result").innerText = "Error: " + error;
+            }
+        }
+
+        // Initial call
+        fetchLatestDataAndPredict();
+
+        // Refresh every 90 seconds
+        setInterval(fetchLatestDataAndPredict, 90000);
+    </script>
+</body>
+</html>
