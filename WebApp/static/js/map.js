@@ -76,7 +76,7 @@ async function main() {
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
     const stationData = await getStationData();
     let availabilityData = await getAvailabilityData();
-    let weatherIcon = await getWeatherIcon();
+    let weatherIcon = '01n'
 
     const {locationWindow, windowContent, setIsWindowOpen} = await initializeStationPanel();
 
@@ -101,6 +101,7 @@ async function main() {
         markers.forEach(marker => marker.updateMarkerData(availabilityData));
     }, 60000);
 
+    weatherIcon = await getWeatherIcon();
     // Initial Trigger for WeatherData | Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
     markers.forEach(async (marker, index) => {
         setTimeout(() => {

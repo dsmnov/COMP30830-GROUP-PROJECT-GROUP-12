@@ -154,7 +154,6 @@ export class Marker {
         this.availableBikes = liveData.available_bikes;
         this.availableParking = liveData.available_bike_stands;
         this._updateMarkerIcon();
-        console.log('Marker Data Updated');
     }
 
     // Update Weather Data, again prevent global variables
