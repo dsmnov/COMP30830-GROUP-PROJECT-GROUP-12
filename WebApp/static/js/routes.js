@@ -1,3 +1,5 @@
+// Rare global variable for the route to be set to allow for each station panel and planned journey to overwrite eachother, 
+// only 1 journey will ever be displayed or worked with at a time so in this case global variable is fine
 let routePolyline = null;
 
 export async function getRouteData(origin, destination, map) {

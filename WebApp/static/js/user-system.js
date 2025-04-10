@@ -1,5 +1,7 @@
 import { createAccountModal } from './user-authentication.js';
 
+// Ensures dom content is loaded before user authentication code attaches itself to appropriate buttons/ actions
+// Also handles the logout logic
 document.addEventListener('DOMContentLoaded', async () => {
     const logInButton = document.getElementById('log-in-button');
     if ( logInButton ) {

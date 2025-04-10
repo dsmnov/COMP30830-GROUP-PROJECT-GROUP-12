@@ -1,6 +1,7 @@
 // Singleton Coding Style https://refactoring.guru/design-patterns/singleton alongside css-in-js style for modularity and maintainability
 
 export async function createAccountModal() {
+    // Injected CSS to self contain user authentication system to this imported js file in every header
     const css = `
         /* Button hover effects */
         #log-in-button, #register-button {
@@ -121,6 +122,15 @@ export async function createAccountModal() {
     document.body.appendChild(overlay);
     document.body.appendChild(modal);
 
+    /*
+    Rather than having two seperate functions for login and registration, this single function handles both depending on action committed,
+    within the header, login and register buttons have a data attribute specifying what action to take when pressing either button
+    when this function is called, depending on which button is clicked, the dataset will determine the action, the modal is the same and then
+    dynamically renderes and calls the correct register or login method
+
+    within the login model, it also checks if the user becomes logged in after the sent form, if the user is logged in it refreshes the page
+    the website recognises the logged in user and loads the appropriate site.
+    */
     function attachLoginForm(modal, action) {
         const form = modal.querySelector('form');
         if (!form) return;
@@ -153,6 +163,7 @@ export async function createAccountModal() {
         });
     }
 
+    // Show the modal
     async function showModal(action) {
         const reponse = await fetch('/' + action)
         const html = await reponse.text()
@@ -168,6 +179,7 @@ export async function createAccountModal() {
         modal.classList.remove('active');
     }
 
+    // This handles the action logic mentioned above
     const loginButton = document.getElementById('log-in-button');
     const registerButton = document.getElementById('register-button');
     

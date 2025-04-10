@@ -47,6 +47,8 @@ instance_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instan
 app = Flask(__name__, template_folder="templates", instance_relative_config=True, instance_path=instance_path)
 CORS(app)
 
+
+# Webpage routing section
 @app.route("/")
 def home():
     return render_template("home.html")
@@ -72,6 +74,8 @@ def journeyplan():
 def dashboard():
     return render_template("user-system/dashboard.html")
 
+
+# Main Station and Availability API endpoints
 @app.route('/api/stations', methods=['GET'])
 def get_stations():
     engine = create_engine(connection_string, echo = True)
@@ -112,6 +116,7 @@ def get_availability():
 
     return jsonify(availability)
 
+# API routes endpoint
 @app.route('/api/routes', methods=['POST'])
 def get_route():
     body = request.json
@@ -156,6 +161,7 @@ def get_route():
         print('Routes error:', e)
         return jsonify({'error': str(e)}), 500
 
+# Met eireann endpoint for dublin, based on station coordinates for more precise data
 @app.route('/api/weather', methods=['POST'])
 def get_weather():
     data = request.get_json()
@@ -180,7 +186,7 @@ def get_weather_icon():
 #            icon_data = root.find('symbol')
 #            icon_name = icon_data.text.strip()
 #            return icon_name
-#   return '01d'
+#   return '01d' # Testing code
     query = 'https://prodapi.metweb.ie/observations/Dublin/today'
     response = requests.get(query)
 
@@ -190,31 +196,39 @@ def get_weather_icon():
 
     return str(icon)
 
+
 # Logic taken from https://www.youtube.com/watch?v=71EU8gnZqZQ&t=4s and https://flask-login.readthedocs.io/en/latest/
 
+# SQLite connection
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SECRET_KEY'] = 'samplekey'
 
+# SQLAlchemy and password hashing connections to the database
 users_db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+# Login manager from flask documentation
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'home'
 
+# Loads user from the database
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# User Class and defines details for database
 class User(users_db.Model, UserMixin):
     id = users_db.Column(users_db.Integer, primary_key=True)
     username = users_db.Column(users_db.String(20), nullable=False, unique=True)
     password = users_db.Column(users_db.String(256), nullable=False)
 
+# Create the database file if none present
 if not os.path.exists('users.db'):
     with app.app_context():
         users_db.create_all()
 
+# Method of registration using flask form
 class RegisterUser(FlaskForm):
     username = StringField(validators = [
                             InputRequired(), 
@@ -225,6 +239,7 @@ class RegisterUser(FlaskForm):
     password = PasswordField(validators = [
                             InputRequired(), 
                             Length(min = 4, max = 20),
+                            # Ensuring password requirements are met, 1 caps, 1 number, 1 special character
                             Regexp(
                                 r'^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$',
                                 message='Password must contain at least one uppercase letter, one special character and one digit.'
@@ -234,12 +249,14 @@ class RegisterUser(FlaskForm):
 
     submit = SubmitField('Register')
 
+    # Checks no duplicates of users
     def validate_username(self, username):
         existing_username = User.query.filter_by(username = username.data).first()
 
         if existing_username:
             raise ValidationError('Error: Username is already in use. Please enter a different Username.')
 
+# Method of logging in user
 class LoginUser(FlaskForm):
     username = StringField(validators = [
                             InputRequired(), 
@@ -255,6 +272,7 @@ class LoginUser(FlaskForm):
 
     submit = SubmitField('Login')
 
+# Login endpoint and validation logic
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginUser()
@@ -262,11 +280,13 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
+            # Following best practice, password is always held in hased format and compared against user hashed input
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)  
 
     return render_template('user-system/login_account.html', form=form)
 
+# Register endpoint
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterUser()
@@ -277,10 +297,12 @@ def register():
 
         users_db.session.add(new_user)
         users_db.session.commit()
+        # Redirect to login form if user registration is successful
         return render_template('user-system/login_account.html', form=form)
 
     return render_template('user-system/register_account.html', form=form)
 
+# Handle logout logic
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
@@ -306,6 +328,7 @@ def construct_stations_datafile():
 
 OPENWEATHER_API_KEY = "8d3db8ac62d93b208d6cf30ea6ef204c"
 
+# Weather retrieval from OPENWEATHER
 def get_weather_forecast(lat, lng):
     url = (
         f"https://api.openweathermap.org/data/2.5/forecast?"
@@ -328,6 +351,7 @@ with open("WebApp/machine-learning/bike_availability_model.pkl", "rb") as f:
 
 stations_df = construct_stations_datafile()
 
+#Prediction Endpoint
 @app.route('/api/availability/prediction', methods=['GET'])
 def get_availability_prediction():
     date = request.args.get("date")

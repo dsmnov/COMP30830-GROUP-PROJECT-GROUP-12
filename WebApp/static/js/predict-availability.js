@@ -1,4 +1,5 @@
 export async function _predict_availability() {
+    // stationID value is set within markers.js journey planner code
     const stationId = document.getElementById("station_id").value;
     const date = document.getElementById("date").value;
     const time = document.getElementById("time").value;
@@ -11,6 +12,7 @@ export async function _predict_availability() {
 
     const formattedTime = time + ":00";
 
+    // retrieve prediction from flask endpoint
     fetch(`/api/availability/prediction?station_id=${stationId}&date=${date}&time=${formattedTime}`)
         .then(response => response.json())
         .then(data => {
@@ -30,6 +32,7 @@ export async function _predict_availability() {
         });
 }
 
+// Ensuring loading after content loaded
 document.addEventListener('DOMContentLoaded', function() {
     const predictBtn = document.getElementById("predictButton");
     if (predictBtn) {

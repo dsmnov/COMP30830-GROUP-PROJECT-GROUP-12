@@ -2,6 +2,8 @@ import { Marker } from './markers.js';
 import { getWeatherIcon } from './weather.js';
 export let markers = [];
 
+
+// Initialise Google Maps
 async function initMap() {
     const position = { lat: 53.3484, lng: -6.2539 };
 
@@ -14,6 +16,8 @@ async function initMap() {
     });
 }
 
+
+// Retrieve Station Data from endpoint
 async function getStationData() {
     try {
         const response = await fetch('http://127.0.0.1:5000/api/stations');
@@ -23,6 +27,8 @@ async function getStationData() {
     }
 }
 
+
+// Retrieve availability data from endpoint
 async function getAvailabilityData() {
     try {
         const response = await fetch('http://127.0.0.1:5000/api/availability');
@@ -32,6 +38,9 @@ async function getAvailabilityData() {
     }
 }
 
+
+// Initialise the clickable station panel element
+// More effieicent to have 1 station panel element that gets updated depending on which station is clicked than each have their own
 async function initializeStationPanel() {
     const locationWindow = document.getElementById('locationWindow');
     const windowContent = document.getElementById('windowContent');
@@ -53,7 +62,16 @@ async function initializeStationPanel() {
     return {locationWindow, windowContent, setIsWindowOpen(value) {isWindowOpen = value;}};
 }
 
+
+// Main function that makes use of the seperated modular components such as markers, prediction, weather, etc.
 async function main() {
+    /* 
+    >First start the map
+    >Then import marker librarys
+    >retrieve initial data sets from endpoints
+    >construct each individual marker object with the fed data
+    >start refresh loops for data
+    */
     const map = await initMap();
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
     const stationData = await getStationData();
@@ -83,22 +101,22 @@ async function main() {
         markers.forEach(marker => marker.updateMarkerData(availabilityData));
     }, 60000);
 
-    // // Initial Trigger for WeatherData | Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
-    // markers.forEach(async (marker, index) => {
-    //     setTimeout(() => {
-    //         marker.updateWeatherData(weatherIcon);
-    //     }, index * 100);
-    // });
+    // Initial Trigger for WeatherData | Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
+    markers.forEach(async (marker, index) => {
+        setTimeout(() => {
+            marker.updateWeatherData(weatherIcon);
+        }, index * 100);
+    });
 
-    // setInterval(async () => {
-    //     weatherIcon = await getWeatherIcon();
+    setInterval(async () => {
+        weatherIcon = await getWeatherIcon();
 
-    //     markers.forEach((marker, index) => {
-    //         setTimeout(() => {
-    //             marker.updateWeatherData(weatherIcon);
-    //         }, index * 50);
-    //     });
-    // }, 900000);
+        markers.forEach((marker, index) => {
+            setTimeout(() => {
+                marker.updateWeatherData(weatherIcon);
+            }, index * 50);
+        });
+    }, 900000);
 }
 
 main()

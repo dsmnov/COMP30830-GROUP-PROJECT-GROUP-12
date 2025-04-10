@@ -3,9 +3,9 @@
 import { getRouteData } from './routes.js';
 import { markers } from './map.js';
 import { getWeatherData } from './weather.js';
-import { getWeatherIcon } from './weather.js';
 
 export class Marker {
+    // Constructor with all data point to be easily referenced for each object and avoiding global variable clutter
     constructor(id, name, position, map, locationWindow, windowContent, setIsWindowOpen, AdvancedMarkerElement, availabilityData, weatherIcon) {
         this.id = id;
         this.name = name;
@@ -19,9 +19,12 @@ export class Marker {
         this.marker = null;
         this.weatherData = { temperature: null, humidity: null};
         this.weatherIcon = weatherIcon;
+        // As part of the construction, once the data is inserted, each marker is added to the map
         this.addMarker(AdvancedMarkerElement, availabilityData);
     }
 
+
+    // Function to add marker to map and initialise chain of marker actions
     async addMarker(AdvancedMarkerElement, availabilityData) {
         const marker = new AdvancedMarkerElement({
             map: this.map,
@@ -30,12 +33,17 @@ export class Marker {
             title: this.name,
         });
         this.marker = marker;
+        // Use the data to set marker data
         this.updateMarkerData(availabilityData);
+        // Ensure every marker has Info window on hover
         this._addInfoWindow(this.map);
+        // Add dynamic actions to the stationPanel when every station is clicked
         this._addStationPanel()
+        // Responsive clicking and interaction with the marker icons
         this._addResponsiveClick();
     }
 
+    // Info window when marker is hovered
     _addInfoWindow(map) {
         const infoWindow = new google.maps.InfoWindow();
 
@@ -71,6 +79,7 @@ export class Marker {
         });
     }
 
+    // Dynamic clicking on the bike icons
     _addResponsiveClick() {
         this.marker.addEventListener('mousedown', () => {
             this.marker.content.style.transition = "transform 0.1s ease";
@@ -83,6 +92,7 @@ export class Marker {
         });
     }
 
+    // Default marker icon, stations with bad data or are closed will appear white as the api wont have data on them
     _getDefaultMarkerIcon(svgColor) {
         const markerIcon = new DOMParser().parseFromString(
             `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
@@ -95,6 +105,12 @@ export class Marker {
         return markerIcon
     }
 
+    // Dynamic function to regulate color based on usability
+    // Red = No Bikes
+    // Blue = No parking
+    // Green = Optimal balance
+    // The Red Green Blue balance is such that the extreme ranges i.e less than 5 bikes/parking leans towards colors indicated unusable stations i.e red or blue
+    // Wide band of green indicating a more usable station i.e more than 5 bikes or parking
     _updateMarkerIcon() {
         const occupancy = this.availableBikes / (this.availableBikes + this.availableParking);
         let hue;
@@ -132,6 +148,7 @@ export class Marker {
         this.marker.content = pinSvg.cloneNode(true);
     }
 
+    // Update Marker Data, again prevent global variables
     async updateMarkerData(availabilityData) {
         const liveData = availabilityData.find(station => station.number == this.id)
         this.availableBikes = liveData.available_bikes;
@@ -140,15 +157,19 @@ export class Marker {
         console.log('Marker Data Updated');
     }
 
+    // Update Weather Data, again prevent global variables
     async updateWeatherData(weatherIcon) {
         this.weatherData = await getWeatherData(this.position.lat, this.position.lng);
         this.weatherIcon = weatherIcon;
     }
 
+    // Station Panel handler, based on dynamic content insertion on a single hidden panel rather than create a seperate panel for each station
     _addStationPanel() {
         const originMarker = this;
         this.marker.addEventListener('click', (e) => {
-            console.log('WEATHER ICON TEST:', this.weatherIcon);
+
+            // Content to be inserted with OR statements for loading data to ensure that the icons get constructed quicker
+            // Without the || statements, the api can delay the markers being constructed, however with this method they are constructed with placeholder data that appears when updated
             const iconEndPoint = `https://www.met.ie/cms/assets/uploads/2018/01/${this.weatherIcon || '01d'}.png`
             windowContent.innerHTML = `
                 <div class='stationPanelContent'>
@@ -194,6 +215,11 @@ export class Marker {
             this.locationWindow.classList.remove('closing');
             this.locationWindow.classList.add('open');
             this.setIsWindowOpen(true);
+            /* 
+            Ensuring that when the panel is focused certain eventListeners are disabled to prevent crossover
+            In this case, the panel has no X button, so closing the panel requires clicking off the panel, however thats a listener that checks
+            Whether a click happens on the stationPanel or not, this prevent stationPanel clicks from doing that close action
+            */ 
             e.stopPropagation();
         
             /* Searchable Select code taken from https://www.youtube.com/watch?v=lcXjEqGXv14&ab_channel=MazenSalah */
@@ -216,6 +242,8 @@ export class Marker {
 
                 filteredMarkers.forEach(station => {
                     const li = document.createElement('li');
+
+                    // Assigning data to the list elements to allow interaction with other listeners and data inputs based on which list item is clicked
                     li.textContent = station.name;
                     li.dataset.lat = station.position.lat;
                     li.dataset.lng = station.position.lng;
@@ -226,6 +254,7 @@ export class Marker {
                         e.stopPropagation();
 
                         input.value = station.name;
+                        // This is code present with the availability prediction, interaction that inserts journey destination to machine learning prediction
                         document.getElementById('station_id_visible').value = station.name;
                         document.getElementById('station_id').value = station.id;
                         dropdown.style.display = 'none';
@@ -234,11 +263,12 @@ export class Marker {
                             lat: parseFloat(li.dataset.lat),
                             lng: parseFloat(li.dataset.lng)
                         };
-
+                        
                         getRouteData(originMarker.position, destinationCoordinates, originMarker.map);
 
                         const destinationData = markers.find(m => m.id == parseInt(li.dataset.number));
 
+                        // Dynamic warnings on current low availability
                         if (destinationData.availableParking < 3) {
                             document.getElementById('errorMessage1').textContent = 'Warning: Destination has Low Current Parking Availability!';
                         }
