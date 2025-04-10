@@ -83,22 +83,22 @@ async function main() {
         markers.forEach(marker => marker.updateMarkerData(availabilityData));
     }, 60000);
 
-    // Initial Trigger for WeatherData | Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
-    markers.forEach(async (marker, index) => {
-        setTimeout(() => {
-            marker.updateWeatherData(weatherIcon);
-        }, index * 100);
-    });
+    // // Initial Trigger for WeatherData | Forcing a rate limit to the Weather API otherwise it spams the API for data on each marker
+    // markers.forEach(async (marker, index) => {
+    //     setTimeout(() => {
+    //         marker.updateWeatherData(weatherIcon);
+    //     }, index * 100);
+    // });
 
-    setInterval(async () => {
-        weatherIcon = await getWeatherIcon();
+    // setInterval(async () => {
+    //     weatherIcon = await getWeatherIcon();
 
-        markers.forEach((marker, index) => {
-            setTimeout(() => {
-                marker.updateWeatherData(weatherIcon);
-            }, index * 50);
-        });
-    }, 900000);
+    //     markers.forEach((marker, index) => {
+    //         setTimeout(() => {
+    //             marker.updateWeatherData(weatherIcon);
+    //         }, index * 50);
+    //     });
+    // }, 900000);
 }
 
 main()

@@ -23,9 +23,6 @@ export async function getWeatherData(latitude, longitude) {
 
         const parser = new DOMParser();
         const weatherData = parser.parseFromString(weatherResponseText, 'application/xml');
-
-        /* TESTING FOR WEATHER DATA */
-        console.log(weatherData);
         
         const weatherDataBody = weatherData.querySelector('weatherdata product time location');
         const temperatureDOM = weatherDataBody.querySelector('temperature');

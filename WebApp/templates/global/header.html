@@ -12,24 +12,14 @@
 
         {% if current_user.is_authenticated %}
           <!-- If the user is logged in -->
-          <!-- <a class='nav-link user-dropdown' id = 'user'>Welcome, {{ current_user.username }}!</a> -->
-
-
-
           <div class="user-dropdown">
-            <!-- 'Welcome...' link -->
             <a id="user">Welcome, {{ current_user.username }}!</a>
-            
-            <!-- Dropdown content (hidden by default) -->
             <div class="dropdown-content">
               <div id='fill-dropdown-space'></div>
-              <a href="{{ url_for('dashboard') }}" class="dropdown-link">Profile</a>
+              <a href="{{ url_for('dashboard') }}" class='dropdown-link'>Profile</a>
               <a class="dropdown-link" id='log-out-button'>Log Out</a>
             </div>
           </div>
-
-
-
         {% else %}
           <!-- If the user is not logged in -->
           <a class="nav-link" id="log-in-button" data-login="login">Log In</a>

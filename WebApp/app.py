@@ -150,12 +150,11 @@ def get_route():
 
     try:
         r = requests.post(url, json=routes_body, headers=headers)
-        print("Google Routes response:", r.text)
         data = r.json()
         return jsonify(data)
     except Exception as e:
-        print("Routes error:", e)
-        return jsonify({"error": str(e)}), 500
+        print('Routes error:', e)
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/weather', methods=['POST'])
 def get_weather():
@@ -181,7 +180,7 @@ def get_weather_icon():
 #            icon_data = root.find('symbol')
 #            icon_name = icon_data.text.strip()
 #            return icon_name
-
+#   return '01d'
     query = 'https://prodapi.metweb.ie/observations/Dublin/today'
     response = requests.get(query)
 
@@ -201,7 +200,7 @@ bcrypt = Bcrypt(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'home'
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -370,28 +369,6 @@ def get_availability_prediction():
         "predicted_available_bike_stands": int(prediction[1]),
         "weather": weather
     })
-
-# Linking API function for Prediction Automation
-stored_stationid = None
-@app.route('/api/availability/prediction/stationid', methods=['POST'])
-def send_prediction_stationid():
-    global stored_stationid
-    station_name = request.get_data(as_text=True).strip()
-
-    engine = create_engine(connection_string, echo=True)
-    with engine.connect() as connection:
-        query = text('SELECT number AS station_id FROM station WHERE name = :station_name')
-        result = connection.execute(query, {"station_name": station_name}).mappings().first()
-        station_id = result['station_id'] if result else None
-
-    stored_stationid = { 'station_id' : station_id }
-    return '', 204
-
-@app.route('/api/availability/prediction/stationid/get', methods=['POST'])
-def get_prediction_stationid():
-    print(stored_stationid)
-    return stored_stationid
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

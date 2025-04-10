@@ -149,7 +149,7 @@ export class Marker {
         const originMarker = this;
         this.marker.addEventListener('click', (e) => {
             console.log('WEATHER ICON TEST:', this.weatherIcon);
-            const iconEndPoint = `https://www.met.ie/cms/assets/uploads/2018/01/${this.weatherIcon}.png`
+            const iconEndPoint = `https://www.met.ie/cms/assets/uploads/2018/01/${this.weatherIcon || '01d'}.png`
             windowContent.innerHTML = `
                 <div class='stationPanelContent'>
                     <div id='stationPanelTitle'>
@@ -226,8 +226,8 @@ export class Marker {
                         e.stopPropagation();
 
                         input.value = station.name;
-                        document.getElementById("station_id_visible").value = station.name;
-                        sendDestinationForPrediction(station.name);
+                        document.getElementById('station_id_visible').value = station.name;
+                        document.getElementById('station_id').value = station.id;
                         dropdown.style.display = 'none';
 
                         const destinationCoordinates = {
@@ -269,14 +269,4 @@ export class Marker {
             });
         });
     }
-}
-
-function sendDestinationForPrediction(stationName) {
-    fetch('/api/availability/prediction/stationid', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: stationName
-    });
-
-
 }
