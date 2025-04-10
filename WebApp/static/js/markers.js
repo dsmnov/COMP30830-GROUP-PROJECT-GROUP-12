@@ -156,7 +156,8 @@ export class Marker {
         this._updateMarkerIcon();
     }
 
-    // Update Weather Data, again prevent global variables
+    // Update Weather Data, again prevent global variables, weather Icon is grabbed from main() which feeds it into this call method
+    // This is because every station has the same relative icon but may have different temps and values, so icon is grabbed once, then each station grabs its own specific weather data
     async updateWeatherData(weatherIcon) {
         this.weatherData = await getWeatherData(this.position.lat, this.position.lng);
         this.weatherIcon = weatherIcon;
@@ -256,6 +257,7 @@ export class Marker {
                         // This is code present with the availability prediction, interaction that inserts journey destination to machine learning prediction
                         document.getElementById('station_id_visible').value = station.name;
                         document.getElementById('station_id').value = station.id;
+                        
                         dropdown.style.display = 'none';
 
                         const destinationCoordinates = {
