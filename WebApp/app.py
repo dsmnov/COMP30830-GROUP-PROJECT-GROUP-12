@@ -10,10 +10,7 @@ import simplejson as json
 import requests
 import time
 from IPython.display import display
-import traceback
 from datetime import datetime
-import time
-import os
 import pymysql
 from urllib.parse import urlparse, urljoin
 import xml.etree.ElementTree as ET
@@ -326,10 +323,18 @@ def construct_stations_datafile():
         stations_df = pd.DataFrame(result, columns=['station_id', 'lat', 'lng'])
         return stations_df
 
-OPENWEATHER_API_KEY = "8d3db8ac62d93b208d6cf30ea6ef204c"
+OPENWEATHER_API_KEY = "6bdc51a9572de4755048b6b914f96e8c"
 
 # Weather retrieval from OPENWEATHER
-def get_weather_forecast(lat, lng):
+from datetime import datetime, timedelta
+
+def get_weather_forecast(lat, lng, dt_requested):
+    now = datetime.now()
+    forecast_limit = now + timedelta(days=5)
+
+    if dt_requested > forecast_limit:
+        raise Exception("Forecast unavailable: date exceeds 5-day limit")
+
     url = (
         f"https://api.openweathermap.org/data/2.5/forecast?"
         f"lat={lat}&lon={lng}&appid={OPENWEATHER_API_KEY}&units=metric"
@@ -337,16 +342,23 @@ def get_weather_forecast(lat, lng):
     response = requests.get(url)
     if response.status_code != 200:
         raise Exception("Failed to fetch weather data")
+
     data = response.json()
-    forecast = data['list'][0]  # Forecast for next 3-hour slot
+    requested_timestamp = dt_requested.timestamp()
+
+    closest = min(
+        data['list'],
+        key=lambda f: abs(datetime.fromtimestamp(f['dt']).timestamp() - requested_timestamp)
+    )
 
     return {
-        "temperature": forecast['main']['temp'],
-        "humidity": forecast['main']['humidity'],
-        "pressure": forecast['main']['pressure']
+        "temperature": round(closest['main']['temp']),
+        "humidity": round(closest['main']['humidity']),
+        "wind_speed": round(closest['wind']['speed'], 1),
+        "precipitation": round(closest.get('pop', 0) * 100)
     }
 
-with open("WebApp/machine-learning/bike_availability_model.pkl", "rb") as f:
+with open("machine-learning/bike_availability_weather_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 stations_df = construct_stations_datafile()
@@ -361,37 +373,58 @@ def get_availability_prediction():
     if not date or not time or not station_id:
         return jsonify({"error": "Missing date, time, or station_id"}), 400
 
-    dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M:%S")
-    hour = dt.hour
-    day = dt.day
+    try:
+        dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M:%S")
+        hour = dt.hour
+        day_of_week = dt.weekday()
 
-    # Get station coordinates
-    station = stations_df[stations_df['station_id'] == int(station_id)]
-    if station.empty:
-        return jsonify({"error": "Invalid station ID"}), 400
+        station = stations_df[stations_df['station_id'] == int(station_id)]
+        if station.empty:
+            return jsonify({"error": "Invalid station ID"}), 400
 
-    lat = station.iloc[0]['lat']
-    lng = station.iloc[0]['lng']
+        lat = station.iloc[0]['lat']
+        lng = station.iloc[0]['lng']
 
-    # Fetch weather from OpenWeather API
-    weather = get_weather_forecast(lat, lng)
+        # Get weather forecast, if available
+        try:
+            weather = get_weather_forecast(lat, lng, dt)
+            weather_available = True
+            temperature = weather["temperature"]
+            humidity = weather["humidity"]
+            wind_speed = weather["wind_speed"]
+            precipitation = weather["precipitation"]
+        except Exception as e:
+            print("Weather unavailable:", e)
+            weather = {}
+            weather_available = False
+            temperature = 11
+            humidity = 75
+            wind_speed = 3.5
+            precipitation = 30
 
-    input_features = np.array([[
-        int(station_id),
-        hour,
-        day,
-        weather["temperature"],
-        weather["humidity"],
-        weather["pressure"]
-    ]])
+        # Predict bikes
+        input_features = np.array([[int(station_id), hour, day_of_week, temperature, humidity, wind_speed, precipitation]])
+        predicted_bikes = int(model.predict(input_features)[0])
 
-    prediction = model.predict(input_features)[0]
+        # Fetch station capacity
+        engine = create_engine(connection_string)
+        with engine.connect() as connection:
+            bike_stands = connection.execute(
+                text(f"SELECT bikestands FROM station WHERE number = {station_id}")
+            ).scalar()
 
-    return jsonify({
-        "predicted_available_bikes": int(prediction[0]),
-        "predicted_available_bike_stands": int(prediction[1]),
-        "weather": weather
-    })
+        predicted_docks = bike_stands - predicted_bikes
+
+        return jsonify({
+            "predicted_available_bikes": predicted_bikes,
+            "predicted_available_docks": predicted_docks,
+            "weather": weather,
+            "weather_available": weather_available
+        })
+
+    except Exception as e:
+        print("Prediction error:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
