@@ -73,6 +73,7 @@ async function main() {
     >start refresh loops for data
     */
     const map = await initMap();
+    window.map = map;
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
     const stationData = await getStationData();
     let availabilityData = await getAvailabilityData();
