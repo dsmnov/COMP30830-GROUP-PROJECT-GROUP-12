@@ -15,11 +15,14 @@
 
     <!-- Local CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/journeyplan.css') }}">
 
     <!-- Local Script Imports -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFdzfzeBk3A8ASwoklDgw2HG4n6ewF4Iw&v=beta&libraries=geometry"></script>
     <script defer type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script defer type="module" src="{{ url_for('static', filename='js/predict-availability.js') }}"></script>
+    <script defer type="module" src="{{ url_for('static', filename='js/journey-logic.js') }}"></script>
+    <script defer type="module" src="{{ url_for('static', filename='js/station-loader.js') }}"></script>
 
     <!-- Doing this solves a jinja template and dynamic insertion issue -->
     <script>
@@ -37,6 +40,62 @@
       <div class = 'marker'></div>
     </div>
 
+  <!-- Quick Trip Panel -->
+<div id="quick-trip-panel" class="journey-float-panel">
+  <h3>Quick Trip</h3>
+
+  <!-- Departure Station Dropdown -->
+  <label>Departure Station:
+    <select id="quick-start-station"></select>
+  </label>
+
+  <!-- This is where the LIVE STATUS will appear -->
+  <div id="quick-live-result" class="result-block"></div>
+
+  <!-- Arrival Section -->
+  <label>Arrival Station:
+    <select id="quick-destination-station"></select>
+  </label>
+
+  <label>Arrival Date & Time:
+    <input type="datetime-local" id="quick-datetime" />
+  </label>  
+
+  <button id="quick-predict-button" class="btn">Show Prediction</button>
+
+  <!-- This is where the PREDICTED Arrival will appear -->
+  <div id="quick-result"></div>
+</div>
+
+  <!-- Plan Ahead Panel -->
+  <div id="plan-ahead-panel" class="journey-float-panel">
+    <h3>Plan Ahead</h3>
+  
+    <label>Departure Station:
+      <select id="plan-start-station"></select>
+    </label>
+  
+    <label>Departure Date & Time:
+      <input type="datetime-local" id="plan-start-time" />
+    </label>
+  
+    <!-- Departure prediction appears here -->
+    <div id="plan-start-result" class="result-block"></div>
+  
+    <label>Arrival Station:
+      <select id="plan-destination-station"></select>
+    </label>
+  
+    <label>Arrival Date & Time:
+      <input type="datetime-local" id="plan-destination-time" />
+    </label>
+  
+    <!-- Arrival prediction appears here -->
+    <div id="plan-destination-result" class="result-block"></div>
+  
+    <button id="plan-predict-button" class="btn">Show Prediction</button>
+  </div>
+  
     <div id = 'locationWindow'>
       <div id = 'windowContent'></div>
       <div id='predictionContent'>
