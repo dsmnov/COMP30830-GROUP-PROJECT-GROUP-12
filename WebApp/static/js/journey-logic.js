@@ -1,22 +1,18 @@
 import { getWeatherData } from './weather.js';
+import { drawTripRoute } from './trip-router.js';
 
 // Panel Switching Functions 
 
-// Show Quick Trip panel and hide Plan Ahead panel
 export function openQuickTrip() {
   document.getElementById("quick-trip-panel").style.display = "block";
   document.getElementById("plan-ahead-panel").style.display = "none";
 }
 
-// Show Plan Ahead panel and hide Quick Trip panel
 export function openPlanAhead() {
   document.getElementById("quick-trip-panel").style.display = "none";
   document.getElementById("plan-ahead-panel").style.display = "block";
 }
 
-// Quick Trip Prediction
-
-// Fetch and display prediction for arrival station in Quick Trip mode
 export async function startQuickTrip() {
   const startId = document.getElementById("quick-start-station").value;
   const destId = document.getElementById("quick-destination-station").value;
@@ -25,6 +21,17 @@ export async function startQuickTrip() {
 
   const destUrl = `/api/availability/prediction?station_id=${destId}&date=${date}&time=${time}:00`;
   const dest = await fetch(destUrl).then(res => res.json());
+
+  const stations = await fetch('/api/stations').then(res => res.json());
+  const startStation = stations.find(s => s.number == startId);
+  const destStation = stations.find(s => s.number == destId);
+  if (startStation && destStation) {
+    await drawTripRoute(
+      { lat: startStation.lat, lng: startStation.lng },
+      { lat: destStation.lat, lng: destStation.lng },
+      window.map
+    );
+  }
 
   let output = `
     <h4>Arrival (Predicted Status)</h4>
@@ -42,9 +49,6 @@ export async function startQuickTrip() {
   document.getElementById("quick-result").innerHTML = output;
 }
 
-// Quick Trip Live Info
-
-// Fetch and display real-time status of selected departure station
 async function updateLiveStartInfo() {
   const startId = document.getElementById("quick-start-station").value;
   const startData = await fetch('/api/availability').then(res => res.json());
@@ -76,9 +80,6 @@ async function updateLiveStartInfo() {
   document.getElementById("quick-live-result").innerHTML = startHtml;
 }
 
-// Plan Ahead Prediction
-
-// Fetch and display predictions for departure and arrival stations
 export async function predictPlannedTrip() {
   const sId = document.getElementById("plan-start-station").value;
   const sDt = document.getElementById("plan-start-time").value;
@@ -96,8 +97,21 @@ export async function predictPlannedTrip() {
   const sUrl = `/api/availability/prediction?station_id=${sId}&date=${sDate}&time=${sTime}`;
   const dUrl = `/api/availability/prediction?station_id=${dId}&date=${dDate}&time=${dTime}`;
 
-  const start = await fetch(sUrl).then(res => res.json());
-  const dest = await fetch(dUrl).then(res => res.json());
+  const [start, dest] = await Promise.all([
+    fetch(sUrl).then(res => res.json()),
+    fetch(dUrl).then(res => res.json())
+  ]);
+
+  const stations = await fetch('/api/stations').then(res => res.json());
+  const startStation = stations.find(s => s.number == sId);
+  const destStation = stations.find(s => s.number == dId);
+  if (startStation && destStation) {
+    await drawTripRoute(
+      { lat: startStation.lat, lng: startStation.lng },
+      { lat: destStation.lat, lng: destStation.lng },
+      window.map
+    );
+  }
 
   const startHtml = `
     <h4>Departure (Predicted Status)</h4>
@@ -123,22 +137,17 @@ export async function predictPlannedTrip() {
   document.getElementById("plan-destination-result").innerHTML = destHtml;
 }
 
-// Initial Setup on Page Load
-
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const mode = params.get("mode");
 
-  // Automatically open panel based on query parameter
   if (mode === "quick") openQuickTrip();
   else if (mode === "plan") openPlanAhead();
   else {
-    // Default state: both panels hidden
     document.getElementById("quick-trip-panel").style.display = "none";
     document.getElementById("plan-ahead-panel").style.display = "none";
   }
 
-  // Attach button listeners
   const quickBtn = document.getElementById("quick-predict-button");
   if (quickBtn) quickBtn.addEventListener("click", startQuickTrip);
 
