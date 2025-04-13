@@ -8,8 +8,14 @@
         <a href="{{ url_for('ride') }}" class="nav-link">Ride Experience</a>
         <a href="{{ url_for('plans') }}" class="nav-link">Plans & Pricing</a>
         <a href="{{ url_for('explore') }}" class="nav-link">Explore Dublin</a>
-        <a href="{{ url_for('journeyplan') }}" class="nav-link">Journey Planner</a>
-
+        <div class="dropdown">
+          <a href="/journeyplan" class="nav-link dropbtn">Journey Planner ▾</a>
+          <div class="dropdown-content">
+            <a href="/journeyplan?mode=quick">Quick Trip</a>
+            <a href="/journeyplan?mode=plan">Plan Ahead</a>
+          </div>
+        </div>
+        
         {% if current_user.is_authenticated %}
           <!-- If the user is logged in -->
           <div class="user-dropdown">
