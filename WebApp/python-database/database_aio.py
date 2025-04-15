@@ -22,6 +22,12 @@ PORT = "3306"
 DB = "dbbikes"
 URI = "127.0.0.1"
 
+#Connect without connecting to DB first to create the DB if it does not exist
+engine_without_db = create_engine(f"mysql+pymysql://{USER}:{PASSWORD}@{URI}:{PORT}")
+
+with engine_without_db.connect() as conn:
+    conn.execute(sqla.text(f"CREATE DATABASE IF NOT EXISTS {DB}"))
+
 #Connection string and engine to connect to database - reusable
 connection_string = "mysql+pymysql://{}:{}@{}:{}/{}".format(USER, PASSWORD, URI, PORT, DB)
 engine = create_engine(connection_string, echo = True)

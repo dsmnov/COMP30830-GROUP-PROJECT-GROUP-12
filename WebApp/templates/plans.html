@@ -1,104 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plans & Pricing | Dublin Bikes</title>
-    <link rel="icon" href="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" type="image/svg+xml">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plans & Pricing | Dublin Bikes</title>
+  <link rel="icon" href="{{ url_for('static', filename='assets/dbbikeslogo.svg') }}" type="image/svg+xml">
 
-    <!-- Global CSS and Global Script Imports -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/global.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global/footer.css') }}">
-    <script defer type="module" src="{{ url_for('static', filename='js/user-system.js') }}"></script>
+  <!-- Global CSS and Global Script Imports -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global/global.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global/header.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global/footer.css') }}">
+  <script defer type="module" src="{{ url_for('static', filename='js/user-system.js') }}"></script>
 
-    <!-- Local CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/planspage.css') }}">
-
+  <!-- Local CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/planspage.css') }}">
 </head>
+
 <body>
   <!-- Header -->
   {% include 'global/header.html' %} 
 
-    <main>
-        <section class="plans-container">
-            <div class="pricing-header">
-                <div class="pricing_header_content">
-                    <h2>Plans & Pricing</h2>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rerum praesentium ratione doloremque quam cum ipsum deserunt quod debitis eos? Rem, facere dolorum error ipsa quis at quae eum facilis laborum.</p>
+  <main>
+    <section class="plans-container">
+      <div class="pricing-header">
+        <div class="pricing_header_content">
+          <h2>Plans & Pricing</h2>
+          <p>
+            Riding through Dublin has never been easier.
+            Buy a Day Ticket or choose a subscription — grab a bike and explore the city at your own pace
+          </p>
+        </div>
+
+        <div class="plans_wrapper">
+          <div class="plans">
+
+            <!-- Day Ticket -->
+            <div class="day_tickets one">
+              <div class="ticket_content">
+                <div class="ticket_header">
+                  <h3 class="info">DAY TICKET</h3>
+                  <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
                 </div>
-               
-                    <div class="plans_wrapper">
-                        <div class="plans">
-                            
-                                <div class="day_tickets one">
-                                    <div class="ticket_content">
-                                        <div class="ticket_header">
-                                            <h3 class="info">1 day ticket</h3>
-                                            <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
-                                        </div>
-                                    <div class="ticket_features">
-                                        <hr>
-                                        <p>Helmet Included</p>
-                                        <p>Free Basket Add-on</p>
-                                        <hr>
-                                    </div>
-                                        <a href="{{ url_for('plans') }}" class="button btn">Select</a>
-                                    </div>
-                                   
-                                </div>
-                            
-                          
-                            <div class="day_tickets three">
-                                
-                                <div class="ticket_content">
-                                    <div class="ticket_header">
-                                        <h3 class="info">1 day ticket</h3>
-                                        <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
-                                    </div>
-                                    
-                                    <div class="ticket_features">
-                                        <hr>
-                                        <p>Helmet & Lock Included</p>
-                                        <p>Paid Maintenance Support</p>
-                                        <hr>
-                                    </div>
-                                   
-                                    <a href="{{ url_for('plans') }}" class="button btn">Select</a>
-                                   
-                                   
-                                </div>
-                            </div>
-                          
-                           
-                            <div class="day_tickets annual">
-                                
-                                <div class="ticket_content">
-                                    <div class="ticket_header">
-                                        <h3 class="info">1 day ticket</h3>
-                                        <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
-                                    </div>
-                                    
-                                    <div class="ticket_features">
-                                    <hr>
-                                    <p>Helmet & Lock Included</p>
-                                    <p>Free Maintenance Checkup</p>
-                                    <hr>
-                                    </div>
-                                    <a href="{{ url_for('plans') }}" class="button btn">Select</a>
-                                </div>
-                            </div>
-                           
-                           
-                        </div>
-                    </div>
+                <div class="ticket_features">
+                  <hr>
+                  <p>Helmet Included</p>
+                  <p>Free Basket Add-on</p>
+                  <p>Perfect for visitors</p>
+                  <hr>
+                </div>
+                <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+              </div>
             </div>
-            
-        </section>
-    </main>
-  
+
+            <!-- Monthly Subscription -->
+            <div class="day_tickets three">
+              <div class="ticket_content">
+                <div class="ticket_header">
+                  <h3 class="info">Monthly Subscription</h3>
+                  <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
+                </div>
+                <div class="ticket_features">
+                  <hr>
+                  <p>Helmet & Lock Included</p>
+                  <p>Paid Maintenance Support</p>
+                  <p>Unlimited 30-min rides</p>
+                  <hr>
+                </div>
+                <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+              </div>
+            </div>
+
+            <!-- Annual Subscription -->
+            <div class="day_tickets annual">
+              <div class="ticket_content">
+                <div class="ticket_header">
+                  <h3 class="info">Annual Subscription</h3>
+                  <img src="{{ url_for('static', filename='assets/plans_image.png') }}" alt="">
+                </div>
+                <div class="ticket_features">
+                  <hr>
+                  <p>Helmet & Lock Included</p>
+                  <p>Free Maintenance Checkup</p>
+                  <p>Best value for daily riders</p>
+                  <hr>
+                </div>
+                <a href="{{ url_for('plans') }}" class="button btn">Select</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
   <!-- Footer -->
   {% include 'global/footer.html' %}
-  
 </body>
 </html>

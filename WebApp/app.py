@@ -326,7 +326,7 @@ def construct_stations_datafile():
         stations_df = pd.DataFrame(result, columns=['station_id', 'lat', 'lng'])
         return stations_df
 
-OPENWEATHER_API_KEY = "8d3db8ac62d93b208d6cf30ea6ef204c"
+OPENWEATHER_API_KEY = "6bdc51a9572de4755048b6b914f96e8c"
 
 # Weather retrieval from OPENWEATHER
 def get_weather_forecast(lat, lng):
