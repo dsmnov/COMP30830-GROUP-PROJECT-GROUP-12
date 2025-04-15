@@ -403,7 +403,7 @@ def get_availability_prediction():
             precipitation = 30
 
         # Predict bikes
-        input_features = np.array([[int(station_id), hour, day_of_week, temperature, humidity, wind_speed, precipitation]])
+        input_features = np.array([[int(station_id), hour, day_of_week, temperature, humidity]])
         predicted_bikes = int(model.predict(input_features)[0])
 
         # Fetch station capacity
